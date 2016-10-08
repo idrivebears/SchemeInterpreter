@@ -5,8 +5,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SchemeInterpreter.Lexer;
+using SimpleLexer;
 
-namespace SchemeInterpreter
+namespace SchemeInterpreter.Lexer
 {
     class Program
     {
