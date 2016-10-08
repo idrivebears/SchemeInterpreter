@@ -1,0 +1,21 @@
+(InlineComment):";;[^\n]*\n"
+(Keyword):"access|define-syntax|macro|and|delay|make-environment|begin|do|named-lambda|case|fluid-let|or|cond|if|quasiquote|cons-stream|in-package|quote|declare|lambda|scode-quote|default-object?|sequence|set!|define-integrable|let-syntax|the-environment|define-macro|letrec|unassigned?|define-structure|local-declare|using-syntax|let|define";
+(white-space):"\s+";
+(OpPlus):"\+";
+(OpMinus):"-";
+(OpMult):"\*";
+(OpDiv):"/";
+(OpMod):"modulo";
+(OpQuotient):"quotient";
+(OpEqual):"equal\?"
+(OpEqv):"eqv\?";
+(OpEq):"eq\?";
+(OpGreaterEq):">=";
+(OpLessEq):"<=";
+(OpEqualN):"=";
+(OpLess):"<";
+(OpGreater):">";
+(Number):"(\+|-)?[0-9]+";
+(Identifier):"([A-z!$%&*/:<=>?~_^])(([A-z0-9!$%&*/:<=>?~_^.+-])*[+-]*( \.\.\.)*)";
+(String):"("")([^""]*)("")";
+(Delimiter):"[();""'`|{}[]|]";
