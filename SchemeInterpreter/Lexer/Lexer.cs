@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace SimpleLexer
+namespace SchemeInterpreter.Lexer
 {
     //Implementation by Drew Miller
     public class Lexer : ILexer

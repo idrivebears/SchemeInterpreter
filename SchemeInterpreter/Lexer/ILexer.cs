@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SimpleLexer
+namespace SchemeInterpreter.Lexer
 {
     //Implementation by Drew Miller
     public interface ILexer

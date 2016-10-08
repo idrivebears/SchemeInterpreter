@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Lexer\ILexer.cs" />
     <Compile Include="Lexer\Lexer.cs" />
+    <Compile Include="Lexer\LexerGenerator.cs" />
     <Compile Include="Lexer\Token.cs" />
     <Compile Include="Lexer\TokenDefinition.cs" />
     <Compile Include="Lexer\TokenPosition.cs" />

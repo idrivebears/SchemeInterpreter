@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SimpleLexer
+namespace SchemeInterpreter.Lexer
 {
     public class TokenPosition
     {
