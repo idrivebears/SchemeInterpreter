@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using SchemeInterpreter.Lexer;
+using SchemeInterpreter.LexerEngine;
 
 namespace SchemeInterpreter
 {
@@ -12,7 +12,7 @@ namespace SchemeInterpreter
     {
         static void Main(string[] args)
         {
-            var lexer = new Lexer();
+            var lexer = new LexerEngine();
 
             lexer.AddDefinition(new TokenDefinition(
                 "(Operator)",
