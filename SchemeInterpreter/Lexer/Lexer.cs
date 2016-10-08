@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using SimpleLexer;
 
-namespace SchemeInterpreter.Lexer
+namespace SchemeInterpreter.LexerEngine
 {
     //Implementation by Drew Miller
     public class Lexer : ILexer

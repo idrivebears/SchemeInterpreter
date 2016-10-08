@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using SchemeInterpreter.Lexer;
-using SimpleLexer;
+using SchemeInterpreter.LexerEngine;
 
-namespace SchemeInterpreter.Lexer
+namespace SchemeInterpreter
 {
     class Program
     {
