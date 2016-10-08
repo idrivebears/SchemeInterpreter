@@ -12,26 +12,16 @@ namespace SchemeInterpreter
     {
         static void Main(string[] args)
         {
-            var lexer = new Lexer();
+            
+            var lexer = LexerGenerator.Generate("test.miniflex");
 
-            lexer.AddDefinition(new TokenDefinition(
-                "(Operator)",
-                new Regex(@"\*|\/|\+|\-")));
+            if (lexer != null)
+            {
+                var tokens = lexer.Tokenize("1 * 2 / 3 + 4 - 5");
 
-            lexer.AddDefinition(new TokenDefinition(
-                "(literal)",
-                new Regex(@"\d+")));
-
-
-            lexer.AddDefinition(new TokenDefinition(
-                "(white-space)",
-                new Regex(@"\s+"),
-                true));
-
-            var tokens = lexer.Tokenize("1 * 2 / 3 + 4 - 5");
-
-            foreach (var token in tokens)
-                Console.WriteLine(token);
+                foreach (var token in tokens)
+                    Console.WriteLine(token);
+            }
 
             Console.WriteLine("Press ENTER to quit.");
             Console.ReadLine();
