@@ -12,7 +12,7 @@ namespace SchemeInterpreter
     {
         static void Main(string[] args)
         {
-            var lexer = new LexerEngine();
+            var lexer = new Lexer();
 
             lexer.AddDefinition(new TokenDefinition(
                 "(Operator)",
