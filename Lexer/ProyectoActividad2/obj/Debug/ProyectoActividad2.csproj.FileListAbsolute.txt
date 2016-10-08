@@ -1,1 +1,2 @@
 c:\users\alex walls\documents\visual studio 2015\Projects\ProyectoActividad2\ProyectoActividad2\bin\Debug\ProyectoActividad2.exe.config
+C:\Users\Alex Walls\Documents\GitHub\SchemeInterpreter\Lexer\ProyectoActividad2\bin\Debug\ProyectoActividad2.exe.config

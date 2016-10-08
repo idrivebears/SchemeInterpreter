@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace ProyectoActividad2
 {
-    class GrammarAnalyzer
+    public class GrammarAnalyzer
     {
+
     }
 }
