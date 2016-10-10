@@ -37,10 +37,11 @@ namespace SchemeInterpreterTest.Structures
     public class GrammarTest
     {
         private Grammar grammar;
+        private Dictionary<string, Symbol> symbols;
 
         public GrammarTest()
         {
-            var symbols = new Dictionary<string, Symbol>
+            symbols = new Dictionary<string, Symbol>
             {
                 {"E", new Symbol(Symbol.NoTerminal, "E")},
                 {"E'", new Symbol(Symbol.NoTerminal, "E'")},
@@ -119,16 +120,21 @@ namespace SchemeInterpreterTest.Structures
         public void TestGenerateFirstSets()
         {
             grammar.GenerateFirstSets();
-            foreach (var symbol in grammar.FirstSets.Keys)
-            {
-                Console.WriteLine("First of " + symbol);
-                foreach (var element in grammar.FirstSets[symbol])
-                {
-                    Console.WriteLine(element);
-                }
-                Console.WriteLine("\n");
-            }
 
+            var firstofE = new HashSet<Symbol>
+            {
+                symbols["("],
+                symbols["id"]
+            };
+            Assert.IsTrue(grammar.FirstSets[symbols["E"]].SetEquals(firstofE));
+
+            var firstofEp = new HashSet<Symbol>
+            {
+                symbols["+"],
+                symbols["EPSILON"]
+            };
+
+            Assert.IsTrue(grammar.FirstSets[symbols["E'"]].SetEquals(firstofEp));
         }
 
     }

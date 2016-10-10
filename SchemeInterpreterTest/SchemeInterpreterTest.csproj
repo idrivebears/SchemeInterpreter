@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="Structures\GrammarTest.cs" />
     <Compile Include="Structures\SymbolTest.cs" />
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

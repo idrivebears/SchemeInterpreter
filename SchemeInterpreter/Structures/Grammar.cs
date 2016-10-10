@@ -77,12 +77,13 @@ namespace SchemeInterpreter.Structures
                     
                     if (symbolsThatContainEps != productionRule.Body.Count)
                         symbolsToAdd.RemoveWhere(e => e.IsEpsilon());
-                    
-                    if(symbolsToAdd.SetEquals(FirstSets[productionRule.Header])) 
-                        continue;
 
-                    FirstSets[productionRule.Header].UnionWith(symbolsToAdd);
-                    changeHasOccurred = true;
+                    if (!symbolsToAdd.IsSubsetOf(FirstSets[productionRule.Header]))
+                    {
+                        FirstSets[productionRule.Header].UnionWith(symbolsToAdd);
+                        changeHasOccurred = true;    
+                    }
+
                 }
 
             }

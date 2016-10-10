@@ -66,7 +66,7 @@ namespace SchemeInterpreterTest.Structures
 
             set.Add(new Symbol(Symbol.Epsilon, "EPSILON"));
 
-            Assert.IsTrue(set.Contains(new Symbol(Symbol.Epsilon, "EPSILON")));
+            Assert.IsFalse(set.Contains(new Symbol(Symbol.Epsilon, "EPSILON")));
 
         }
     }
