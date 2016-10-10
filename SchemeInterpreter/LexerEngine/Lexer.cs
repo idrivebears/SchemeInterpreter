@@ -7,26 +7,26 @@ namespace SchemeInterpreter.LexerEngine
     //Implementation by Drew Miller
     public class Lexer : ILexer
     {
-        Regex endOfLineRegex = new Regex(@"\r\n|\r|\n", RegexOptions.Compiled);
-        IList<TokenDefinition> tokenDefinitions = new List<TokenDefinition>();
+        readonly Regex _endOfLineRegex = new Regex(@"\r\n|\r|\n", RegexOptions.Compiled);
+        readonly IList<TokenDefinition> _tokenDefinitions = new List<TokenDefinition>();
 
         public void AddDefinition(TokenDefinition tokenDefinition)
         {
-            tokenDefinitions.Add(tokenDefinition);
+            _tokenDefinitions.Add(tokenDefinition);
         }
 
         public IEnumerable<Token> Tokenize(string source)
         {
-            int currentIndex = 0;
-            int currentLine = 1;
-            int currentColumn = 0;
+            var currentIndex = 0;
+            var currentLine = 1;
+            var currentColumn = 0;
 
             while (currentIndex < source.Length)
             {
                 TokenDefinition matchedDefinition = null;
-                int matchLength = 0;
+                var matchLength = 0;
 
-                foreach (var rule in tokenDefinitions)
+                foreach (var rule in _tokenDefinitions)
                 {
                     var match = rule.Regex.Match(source, currentIndex);
 
@@ -49,7 +49,7 @@ namespace SchemeInterpreter.LexerEngine
                     if (!matchedDefinition.IsIgnored)
                         yield return new Token(matchedDefinition.Type, value, new TokenPosition(currentIndex, currentLine, currentColumn));
 
-                    var endOfLineMatch = endOfLineRegex.Match(value);
+                    var endOfLineMatch = _endOfLineRegex.Match(value);
                     if (endOfLineMatch.Success)
                     {
                         currentLine += 1;

@@ -41,12 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Lexer\ILexer.cs" />
-    <Compile Include="Lexer\Lexer.cs" />
-    <Compile Include="Lexer\LexerGenerator.cs" />
-    <Compile Include="Lexer\Token.cs" />
-    <Compile Include="Lexer\TokenDefinition.cs" />
-    <Compile Include="Lexer\TokenPosition.cs" />
+    <Compile Include="LexerEngine\ILexer.cs" />
+    <Compile Include="LexerEngine\Lexer.cs" />
+    <Compile Include="LexerEngine\LexerGenerator.cs" />
+    <Compile Include="LexerEngine\Token.cs" />
+    <Compile Include="LexerEngine\TokenDefinition.cs" />
+    <Compile Include="LexerEngine\TokenPosition.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
