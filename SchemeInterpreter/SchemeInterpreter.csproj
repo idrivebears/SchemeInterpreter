@@ -49,6 +49,10 @@
     <Compile Include="Lexer\TokenPosition.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Structures\Grammar.cs" />
+    <Compile Include="Structures\ProductionRule.cs" />
+    <Compile Include="Structures\Symbol.cs" />
+    <Compile Include="SyntacticAnalysis\First.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

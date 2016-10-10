@@ -1,6 +1,6 @@
-﻿using System;
+﻿using SchemeInterpreter.LexerEngine;
 
-namespace SchemeInterpreter.LexerEngine
+namespace SchemeInterpreter.Lexer
 {
     public class Token
     {

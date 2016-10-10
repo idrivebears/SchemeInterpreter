@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchemeInterpreter", "SchemeInterpreter\SchemeInterpreter.csproj", "{A8DCA440-B88E-45D0-8343-57527F3F7584}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchemeInterpreterTest", "SchemeInterpreterTest\SchemeInterpreterTest.csproj", "{55ACA073-151E-48F2-8F97-465DA4689E15}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A8DCA440-B88E-45D0-8343-57527F3F7584}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8DCA440-B88E-45D0-8343-57527F3F7584}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8DCA440-B88E-45D0-8343-57527F3F7584}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55ACA073-151E-48F2-8F97-465DA4689E15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55ACA073-151E-48F2-8F97-465DA4689E15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55ACA073-151E-48F2-8F97-465DA4689E15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55ACA073-151E-48F2-8F97-465DA4689E15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

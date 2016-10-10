@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using SchemeInterpreter.Lexer;
+using SchemeInterpreter.Structures;
 
 namespace SchemeInterpreter.LexerEngine
 {

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using SchemeInterpreter.Lexer;
+using SchemeInterpreter.Structures;
 
 namespace SchemeInterpreter.LexerEngine
 {
