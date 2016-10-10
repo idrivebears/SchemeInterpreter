@@ -43,18 +43,18 @@ namespace SchemeInterpreterTest.Structures
         {
             symbols = new Dictionary<string, Symbol>
             {
-                {"E", new Symbol(Symbol.NoTerminal, "E")},
-                {"E'", new Symbol(Symbol.NoTerminal, "E'")},
-                {"T", new Symbol(Symbol.NoTerminal, "T")},
-                {"T'", new Symbol(Symbol.NoTerminal, "T'")},
-                {"F", new Symbol(Symbol.NoTerminal, "F")},
-                {"id", new Symbol(Symbol.Terminal, "id")},
-                {"+", new Symbol(Symbol.Terminal, "+")},
-                {"*", new Symbol(Symbol.Terminal, "*")},
-                {"(", new Symbol(Symbol.Terminal, "(")},
-                {")", new Symbol(Symbol.Terminal, ")")},
-                {"$", new Symbol(Symbol.Terminal, "$")},
-                {"EPSILON", new Symbol(Symbol.Epsilon, "EPSILON")}
+                {"E", new Symbol(Symbol.SymTypes.NoTerminal, "E")},
+                {"E'", new Symbol(Symbol.SymTypes.NoTerminal, "E'")},
+                {"T", new Symbol(Symbol.SymTypes.NoTerminal, "T")},
+                {"T'", new Symbol(Symbol.SymTypes.NoTerminal, "T'")},
+                {"F", new Symbol(Symbol.SymTypes.NoTerminal, "F")},
+                {"id", new Symbol(Symbol.SymTypes.Terminal, "id")},
+                {"+", new Symbol(Symbol.SymTypes.Terminal, "+")},
+                {"*", new Symbol(Symbol.SymTypes.Terminal, "*")},
+                {"(", new Symbol(Symbol.SymTypes.Terminal, "(")},
+                {")", new Symbol(Symbol.SymTypes.Terminal, ")")},
+                {"$", new Symbol(Symbol.SymTypes.Terminal, "$")},
+                {"EPSILON", new Symbol(Symbol.SymTypes.Epsilon, "EPSILON")}
             };
 
             var productionRules = new List<ProductionRule>();

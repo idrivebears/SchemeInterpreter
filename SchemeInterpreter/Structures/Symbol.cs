@@ -8,17 +8,15 @@ namespace SchemeInterpreter.Structures
 {
     public class Symbol
     {
-        public static string Terminal = "TERMINAL";
-        public static string NoTerminal = "NO_TERMINAL";
-        public static string Epsilon = "EPSILON";
+        public enum SymTypes { Terminal, NoTerminal, Epsilon }
 
-        public Symbol(String type, String value)
+        public Symbol(SymTypes type, string value)
         {
             Type = type;
             Value = value;
         }
 
-        public string Type { get; set; }
+        public SymTypes Type { get; set; }
         public string Value { get; set; }
 
         public List<Symbol> FirstSymbols;
@@ -26,17 +24,17 @@ namespace SchemeInterpreter.Structures
 
         public bool IsTerminal()
         {
-            return Type.Equals(Symbol.Terminal);
+            return Type.Equals(SymTypes.Terminal);
         }
 
         public bool IsNonTerminal()
         {
-            return Type.Equals(Symbol.NoTerminal);
+            return Type.Equals(SymTypes.NoTerminal);
         }
 
         public bool IsEpsilon()
         {
-            return Type.Equals(Symbol.Epsilon);
+            return Type.Equals(SymTypes.Epsilon);
         }
 
         public override string ToString()
