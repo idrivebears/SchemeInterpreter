@@ -10,17 +10,14 @@ namespace SchemeInterpreter.Structures
     {
         public enum SymTypes { Terminal, NoTerminal, Epsilon }
 
+        public SymTypes Type { get; set; }
+        public string Value { get; set; }
+
         public Symbol(SymTypes type, string value)
         {
             Type = type;
             Value = value;
         }
-
-        public SymTypes Type { get; set; }
-        public string Value { get; set; }
-
-        public List<Symbol> FirstSymbols;
-        public List<Symbol> FollowSymbols;
 
         public bool IsTerminal()
         {

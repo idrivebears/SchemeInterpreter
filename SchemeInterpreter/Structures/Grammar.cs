@@ -8,32 +8,21 @@ namespace SchemeInterpreter.Structures
 {
     public class Grammar
     {
-        public Grammar(List<ProductionRule> productionRules, List<Symbol> symbols)
-        {
-            ProductionRules = productionRules;
-            Symbols = symbols;
-        }
-
-        public List<ProductionRule> ProductionRules = new List<ProductionRule>(); 
-        public List<Symbol> Symbols = new List<Symbol>();
+        public readonly List<ProductionRule> ProductionRules;
+        public readonly List<Symbol> Symbols;
         public Dictionary<Symbol, HashSet<Symbol>> FirstSets;
 
-        public override string ToString()
+        public Grammar(IEnumerable<ProductionRule> productionRules, List<Symbol> symbols)
         {
-            var productionRulesString = "\n";
-            foreach (var productionRule in ProductionRules)
-            {
-                productionRulesString += productionRule.ToString();
-                productionRulesString += "\n";
-            }
-            return string.Format("Grammar: Production rules: " + productionRulesString);
+            ProductionRules = new List<ProductionRule>(productionRules);
+            Symbols = new List<Symbol>(Symbols);
         }
 
         public void GenerateFirstSets()
         {
             // Initialize empty sets and terminal symbols
             FirstSets = new Dictionary<Symbol, HashSet<Symbol>>();
-            
+
             foreach (var symbol in Symbols)
             {
                 FirstSets.Add(symbol, new HashSet<Symbol>());
@@ -53,16 +42,16 @@ namespace SchemeInterpreter.Structures
                 }
             }
 
-            bool changeHasOccurred = true;
+            var changeHasOccurred = true;
             while (changeHasOccurred)
             {
                 changeHasOccurred = false;
 
                 foreach (var productionRule in ProductionRules)
                 {
-                    HashSet<Symbol> symbolsToAdd = new HashSet<Symbol>();
+                    var symbolsToAdd = new HashSet<Symbol>();
 
-                    int symbolsThatContainEps = 0;
+                    var symbolsThatContainEps = 0;
 
                     foreach (var symbolInBody in productionRule.Body)
                     {
@@ -74,23 +63,30 @@ namespace SchemeInterpreter.Structures
                             break;
                     }
 
-                    
+
                     if (symbolsThatContainEps != productionRule.Body.Count)
                         symbolsToAdd.RemoveWhere(e => e.IsEpsilon());
 
                     if (!symbolsToAdd.IsSubsetOf(FirstSets[productionRule.Header]))
                     {
                         FirstSets[productionRule.Header].UnionWith(symbolsToAdd);
-                        changeHasOccurred = true;    
+                        changeHasOccurred = true;
                     }
-
                 }
-
             }
+        }
 
 
-
+        public override string ToString()
+        {
+            var productionRulesString = "\n";
+            foreach (var productionRule in ProductionRules)
+            {
+                productionRulesString += productionRule.ToString();
+                productionRulesString += "\n";
             }
+            return string.Format("Grammar: Production rules: " + productionRulesString);
+        }
 
 
 
