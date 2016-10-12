@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SchemeInterpreter.LexerEngine;
+using SchemeInterpreter.Structures;
 
 namespace SchemeInterpreter
 {
@@ -22,6 +23,7 @@ namespace SchemeInterpreter
 
             Console.WriteLine("Press ENTER to quit.");
             Console.ReadLine();
+
         }
     }
 }

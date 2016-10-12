@@ -53,7 +53,7 @@ namespace SchemeInterpreterTest.Structures
                 {"*", new Symbol(Symbol.SymTypes.Terminal, "*")},
                 {"(", new Symbol(Symbol.SymTypes.Terminal, "(")},
                 {")", new Symbol(Symbol.SymTypes.Terminal, ")")},
-                {"$", new Symbol(Symbol.SymTypes.Terminal, "$")},
+                //{"$", new Symbol(Symbol.SymTypes.Terminal, "$")},
                 {"EPSILON", new Symbol(Symbol.SymTypes.Epsilon, "EPSILON")}
             };
 

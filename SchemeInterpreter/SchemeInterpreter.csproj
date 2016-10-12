@@ -52,7 +52,7 @@
     <Compile Include="Structures\Grammar.cs" />
     <Compile Include="Structures\ProductionRule.cs" />
     <Compile Include="Structures\Symbol.cs" />
-    <Compile Include="SyntacticAnalysis\First.cs" />
+    <Compile Include="SyntacticAnalysis\LL1.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
