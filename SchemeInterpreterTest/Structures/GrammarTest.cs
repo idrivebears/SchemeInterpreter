@@ -31,7 +31,6 @@ namespace SchemeInterpreterTest.Structures
              * {id, +, *, (, ), $}
              */
 
-
     /// </summary>
     [TestClass]
     public class GrammarTest
@@ -121,11 +120,14 @@ namespace SchemeInterpreterTest.Structures
         {
             grammar.GenerateFirstSets();
 
+            var first = grammar.FirstSets;
+
             var firstofE = new HashSet<Symbol>
             {
                 symbols["("],
                 symbols["id"]
             };
+
             Assert.IsTrue(grammar.FirstSets[symbols["E"]].SetEquals(firstofE));
 
             var firstofEp = new HashSet<Symbol>

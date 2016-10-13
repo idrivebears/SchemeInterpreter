@@ -12,10 +12,10 @@ namespace SchemeInterpreter.Structures
         public readonly List<Symbol> Symbols;
         public Dictionary<Symbol, HashSet<Symbol>> FirstSets;
 
-        public Grammar(IEnumerable<ProductionRule> productionRules, List<Symbol> symbols)
+        public Grammar(IEnumerable<ProductionRule> productionRules, IEnumerable<Symbol> symbols)
         {
             ProductionRules = new List<ProductionRule>(productionRules);
-            Symbols = new List<Symbol>(Symbols);
+            Symbols = new List<Symbol>(symbols);
         }
 
         public void GenerateFirstSets()
@@ -75,7 +75,6 @@ namespace SchemeInterpreter.Structures
                 }
             }
         }
-
 
         public override string ToString()
         {
