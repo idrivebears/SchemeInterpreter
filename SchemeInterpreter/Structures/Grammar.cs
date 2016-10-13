@@ -28,8 +28,12 @@ namespace SchemeInterpreter.Structures
             //          if symbol is terminal, add to followset
             //          if symbol is non-terminal add the follow of that symbol
             // repeat until all follows are calculated
-
+            
+            GenerateFirstSets();
             FollowSets = new Dictionary<Symbol, HashSet<Symbol>>();
+
+            foreach (var sym in Symbols)
+                FollowSets[sym] = new HashSet<Symbol>();
 
             var initialRule = ProductionRules.First();
             FollowSets[initialRule.Header].Add(new Symbol(Symbol.SymTypes.EOS, "$"));
@@ -46,7 +50,7 @@ namespace SchemeInterpreter.Structures
                     {
                         //Check next element in line
                         var occurance = rule.Body.IndexOf(currentHeader);
-                        if (occurance < rule.Body.Count)
+                        if (occurance + 1 < rule.Body.Count)
                         {
                             var next = rule.Body.ElementAt(occurance + 1);
 
@@ -70,8 +74,6 @@ namespace SchemeInterpreter.Structures
                 }
 
             }
-
-            
         }
 
         public void GenerateFirstSets()

@@ -17,10 +17,12 @@ namespace SchemeInterpreter.SyntacticAnalysis
         {
             //Get all terminal symbols from Grammar
             var terminals = (g.Symbols.Where(s => s.IsTerminal())).ToArray();
+            _symbLookup = new Dictionary<Symbol, int>();
             for (var i = 0; i < terminals.Length; i++)
             {
                 _symbLookup.Add(terminals[i], i);
             }
+            _symbLookup.Add(new Symbol(Symbol.SymTypes.EOS, "$"),terminals.Length);
 
             _table = new int[terminals.Length,g.ProductionRules.Count];
             
@@ -30,7 +32,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             //Generate table
             //Ensure First  & follow sets
             g.GenerateFirstSets();
-            //g.GenerateFollowSets();
+            g.GenerateFollowSets();
 
             for (var i = 0; i < g.ProductionRules.Count; i++)
             {
@@ -39,7 +41,14 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
                 if (focusFirst.Any(s => s.IsEpsilon()))
                 {
-                    //handle FOLLOW, set content is a single symbol EPSILON
+                    var focusFollow = g.FollowSets[g.ProductionRules[i].Header]; //get follow for head of focus production
+                    foreach (var term in focusFollow)
+                    {
+                        //get index
+                        var symIndex = _symbLookup[term];
+                        //place production rule id in table
+                        _table[symIndex, i] = i;
+                    }
                 }
                 
                 foreach (var term in focusFirst)
@@ -55,10 +64,11 @@ namespace SchemeInterpreter.SyntacticAnalysis
         public bool Accept(string input)
         {
             var sym = new Stack<Symbol>();
-            sym.Push(new Symbol(Symbol.SymTypes.Terminal, "$"));
+            sym.Push(new Symbol(Symbol.SymTypes.EOS, "$"));
             sym.Push(_start); //initialize eval stack
 
             //ToDo Acceptance algorithm
+
 
             return false;
         }

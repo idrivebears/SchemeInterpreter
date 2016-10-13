@@ -69,5 +69,25 @@ namespace SchemeInterpreterTest.Structures
             Assert.IsFalse(set.Contains(new Symbol(Symbol.SymTypes.Terminal, "EPSILON")));
 
         }
+
+        [TestMethod]
+        public void TestSymbolEquality()
+        {
+            var a = new Symbol(Symbol.SymTypes.Terminal, "x");
+            var b = new Symbol(Symbol.SymTypes.Terminal, "x");
+            var c = new Symbol(Symbol.SymTypes.Terminal, "y");
+
+            Assert.IsTrue(Equals(a, b));
+            Assert.IsFalse(Equals(a, c));
+        }
+
+        [TestMethod]
+        public void TestEpsilonEquality()
+        {
+            var a = new Symbol(Symbol.SymTypes.Epsilon, "x");
+            var b = new Symbol(Symbol.SymTypes.Epsilon, "y");
+
+            Assert.IsTrue(Equals(a, b));
+        }
     }
 }

@@ -34,9 +34,27 @@ namespace SchemeInterpreter.Structures
             return Type.Equals(SymTypes.Epsilon);
         }
 
+        public bool IsEOS()
+        {
+            return Type.Equals(SymTypes.EOS);
+        }
+
         public override string ToString()
         {
             return string.Format("Symbol: Type: {0}, Value: {1}", Type, Value);
+        }
+
+        public override bool Equals(object obj)
+        {
+            var otherSym = obj as Symbol;
+            if (otherSym != null)
+            {
+                //symbol equality
+                if (IsEpsilon() && otherSym.IsEpsilon() || IsEOS() && otherSym.IsEOS())
+                    return true;
+                return Type == otherSym.Type && Value == otherSym.Value;
+            }
+            return base.Equals(obj);
         }
     }
 }
