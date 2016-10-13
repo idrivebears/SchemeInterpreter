@@ -132,6 +132,32 @@ namespace SchemeInterpreter.Structures
             }
         }
 
+        public HashSet<Symbol> GetFirstSet(int productionId)
+        {
+
+            var productionRule = ProductionRules[productionId];
+            var symbolsToAdd = new HashSet<Symbol>();
+            var symbolsThatContainEps = 0;
+
+            foreach (var symbolInBody in productionRule.Body)
+            {
+                symbolsToAdd.UnionWith(FirstSets[symbolInBody]);
+                if (FirstSets[symbolInBody].Any(e => e.IsEpsilon()))
+                    symbolsThatContainEps++;
+                else
+                    break;
+            }
+
+
+            if (symbolsThatContainEps != productionRule.Body.Count)
+                symbolsToAdd.RemoveWhere(e => e.IsEpsilon());
+
+            if (!symbolsToAdd.IsSubsetOf(FirstSets[productionRule.Header]))
+                FirstSets[productionRule.Header].UnionWith(symbolsToAdd);
+
+            return symbolsToAdd;
+        }
+
         public override string ToString()
         {
             var productionRulesString = "\n";

@@ -120,7 +120,7 @@ namespace SchemeInterpreterTest.Structures
         {
             grammar.GenerateFirstSets();
 
-            var first = grammar.FirstSets;
+            var first = grammar.GetFirstSet(2);
 
             var firstofE = new HashSet<Symbol>
             {
