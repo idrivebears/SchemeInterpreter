@@ -8,7 +8,7 @@ namespace SchemeInterpreter.Structures
 {
     public class Symbol
     {
-        public enum SymTypes { Terminal, NoTerminal, Epsilon }
+        public enum SymTypes { Terminal, NoTerminal, Epsilon, EOS }
 
         public SymTypes Type { get; set; }
         public string Value { get; set; }

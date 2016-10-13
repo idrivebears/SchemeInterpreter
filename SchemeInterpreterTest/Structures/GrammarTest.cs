@@ -137,5 +137,18 @@ namespace SchemeInterpreterTest.Structures
             Assert.IsTrue(grammar.FirstSets[symbols["E'"]].SetEquals(firstofEp));
         }
 
+        [TestMethod]
+        public void TestGenerateFollowSets()
+        {
+            grammar.GenerateFollowSets();
+
+            var followOfE = new HashSet<Symbol>
+            {
+                symbols[")"],
+                symbols["$"]
+            };
+            Assert.IsTrue(grammar.FirstSets[symbols["E"]].SetEquals(followOfE));
+        }
+
     }
 }
