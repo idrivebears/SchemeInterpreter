@@ -143,7 +143,7 @@ namespace SchemeInterpreterTest.Structures
         public void TestGenerateFollowSets()
         {
             grammar.GenerateFirstSets();
-            grammar.GenerateFollowSets2();
+            grammar.GenerateFollowSets();
 
             var followOfE = new HashSet<Symbol>
             {

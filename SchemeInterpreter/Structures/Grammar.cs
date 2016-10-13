@@ -29,7 +29,6 @@ namespace SchemeInterpreter.Structures
             //          if symbol is non-terminal add the follow of that symbol
             // repeat until all follows are calculated
             
-            GenerateFirstSets();
             FollowSets = new Dictionary<Symbol, HashSet<Symbol>>();
 
             foreach (var sym in Symbols)
@@ -46,7 +45,7 @@ namespace SchemeInterpreter.Structures
 
                 foreach (var rule in ProductionRules)
                 {
-                    if (rule.Body.Contains(currentHeader))
+                    if (rule.Body.Contains(currentHeader) && rule.Header != currentHeader)
                     {
                         //Check next element in line
                         var occurance = rule.Body.IndexOf(currentHeader);
@@ -59,6 +58,7 @@ namespace SchemeInterpreter.Structures
                             {
                                 //Contains epsilon, we should add the follow of the Header
                                 FollowSets[currentHeader].UnionWith(FollowSets[rule.Header]);
+                                FollowSets[currentHeader].UnionWith(FirstSets[next]);
                             }
                             else
                             {
