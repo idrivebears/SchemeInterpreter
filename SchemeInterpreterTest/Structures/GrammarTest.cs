@@ -52,7 +52,7 @@ namespace SchemeInterpreterTest.Structures
                 {"*", new Symbol(Symbol.SymTypes.Terminal, "*")},
                 {"(", new Symbol(Symbol.SymTypes.Terminal, "(")},
                 {")", new Symbol(Symbol.SymTypes.Terminal, ")")},
-                //{"$", new Symbol(Symbol.SymTypes.Terminal, "$")},
+                {"$", new Symbol(Symbol.SymTypes.EOS, "$")},
                 {"EPSILON", new Symbol(Symbol.SymTypes.Epsilon, "EPSILON")}
             };
 
@@ -145,12 +145,9 @@ namespace SchemeInterpreterTest.Structures
             grammar.GenerateFirstSets();
             grammar.GenerateFollowSets();
 
-            var followOfE = new HashSet<Symbol>
-            {
-                symbols[")"],
-                symbols["$"]
-            };
-            Assert.IsTrue(grammar.FirstSets[symbols["E"]].SetEquals(followOfE));
+            var testFollowSet = new Dictionary<Symbol, HashSet<Symbol>>();
+
+            
         }
 
     }

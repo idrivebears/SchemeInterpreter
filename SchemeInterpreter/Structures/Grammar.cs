@@ -54,7 +54,7 @@ namespace SchemeInterpreter.Structures
                             var next = rule.Body.ElementAt(occurance + 1);
 
                             // Check if first is an epsilon
-                            if (FirstSets[next].Contains(new Symbol(Symbol.SymTypes.Epsilon, "EPSILON")))
+                            if (FirstSets[next].Any(s => s.IsEpsilon()))
                             {
                                 //Contains epsilon, we should add the follow of the Header
                                 FollowSets[currentHeader].UnionWith(FollowSets[rule.Header]);
@@ -69,7 +69,10 @@ namespace SchemeInterpreter.Structures
                         // The match was found at the end of the production, same case as finding and EPSILON
                         else {
                             FollowSets[currentHeader].UnionWith(FollowSets[rule.Header]);
+                            
                         }
+                        //Remove epsilons from FollowSets
+                        FollowSets[currentHeader].RemoveWhere(s => s.IsEpsilon());
                     }
                 }
 
