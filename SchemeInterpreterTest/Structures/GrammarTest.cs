@@ -18,10 +18,11 @@ namespace SchemeInterpreterTest.Structures
              * E    ->  T E'
              * E'   ->  + T E'
              * E'   ->  eps
-             * T    ->  * F T'
+             * T    ->  F T'
+             * T'   ->  * F T'
              * T'   ->  eps
              * F    ->  ( E )
-             * F    ->  if
+             * F    ->  id
              */
 
             /* No terminal symbols
@@ -143,14 +144,24 @@ namespace SchemeInterpreterTest.Structures
         public void TestGenerateFollowSets()
         {
             grammar.GenerateFirstSets();
-            grammar.GenerateFollowSets();
+            grammar.GenerateFollowSets2();
 
-            var followOfE = new HashSet<Symbol>
-            {
-                symbols[")"],
-                symbols["$"]
-            };
-            Assert.IsTrue(grammar.FirstSets[symbols["E"]].SetEquals(followOfE));
+            var followOfE = new HashSet<Symbol> {new Symbol(Symbol.SymTypes.EOS, "$"),symbols[")"]};
+            var followOfEp = followOfE;
+
+            var followOfT = new HashSet<Symbol> {symbols["+"], symbols[")"], new Symbol(Symbol.SymTypes.EOS, "$")};
+            var followOfTp = followOfT;
+
+            var followofF = new HashSet<Symbol> {symbols["+"], symbols["*"], symbols[")"], new Symbol(Symbol.SymTypes.EOS, "$")};
+
+
+            
+            Assert.IsTrue(true);
+            Assert.IsTrue(grammar.FollowSets[symbols["E'"]].SetEquals(followOfEp) && followOfEp.IsSubsetOf(grammar.FollowSets[symbols["E'"]]));
+            Assert.IsTrue(grammar.FollowSets[symbols["T"]].SetEquals(followOfT) && followOfT.IsSubsetOf(grammar.FollowSets[symbols["T"]]));
+            Assert.IsTrue(grammar.FollowSets[symbols["T'"]].SetEquals(followOfTp) && followOfTp.IsSubsetOf(grammar.FollowSets[symbols["T'"]]));
+            Assert.IsTrue(grammar.FollowSets[symbols["F"]].SetEquals(followofF) && followOfT.IsSubsetOf(grammar.FollowSets[symbols["F"]]));
+            
         }
 
     }
