@@ -41,8 +41,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
             //Generate table
             //Ensure First  & follow sets
-            g.GenerateFirstSets();
-            g.GenerateFollowSets();
+            g.GenerateFirstAndFollow();
 
             for (var i = 0; i < g.ProductionRules.Count; i++)
             {

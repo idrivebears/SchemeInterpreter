@@ -18,10 +18,11 @@ namespace SchemeInterpreterTest.Structures
              * E    ->  T E'
              * E'   ->  + T E'
              * E'   ->  eps
-             * T    ->  * F T'
+             * T    ->  F T'
+             * T'   ->  * F T'
              * T'   ->  eps
              * F    ->  ( E )
-             * F    ->  if
+             * F    ->  id
              */
 
             /* No terminal symbols
@@ -52,7 +53,7 @@ namespace SchemeInterpreterTest.Structures
                 {"*", new Symbol(Symbol.SymTypes.Terminal, "*")},
                 {"(", new Symbol(Symbol.SymTypes.Terminal, "(")},
                 {")", new Symbol(Symbol.SymTypes.Terminal, ")")},
-                //{"$", new Symbol(Symbol.SymTypes.Terminal, "$")},
+                {"$", new Symbol(Symbol.SymTypes.EOS, "$")},
                 {"EPSILON", new Symbol(Symbol.SymTypes.Epsilon, "EPSILON")}
             };
 

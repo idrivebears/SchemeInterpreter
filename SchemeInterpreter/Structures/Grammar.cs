@@ -19,7 +19,13 @@ namespace SchemeInterpreter.Structures
             Symbols = new List<Symbol>(symbols);
         }
 
-        public void GenerateFollowSets()
+        public void GenerateFirstAndFollow()
+        {
+            GenerateFirstSets();
+            GenerateFollowSets();
+        }
+
+        private void GenerateFollowSets()
         {
             // Place $ symbol on initial symbol's followset
             // Start with initial symbol:
@@ -54,7 +60,7 @@ namespace SchemeInterpreter.Structures
                             var next = rule.Body.ElementAt(occurance + 1);
 
                             // Check if first is an epsilon
-                            if (FirstSets[next].Contains(new Symbol(Symbol.SymTypes.Epsilon, "EPSILON")))
+                            if (FirstSets[next].Any(s => s.IsEpsilon()))
                             {
                                 //Contains epsilon, we should add the follow of the Header
                                 FollowSets[currentHeader].UnionWith(FollowSets[rule.Header]);
@@ -69,77 +75,17 @@ namespace SchemeInterpreter.Structures
                         // The match was found at the end of the production, same case as finding and EPSILON
                         else {
                             FollowSets[currentHeader].UnionWith(FollowSets[rule.Header]);
+                            
                         }
+                        //Remove epsilons from FollowSets
+                        FollowSets[currentHeader].RemoveWhere(s => s.IsEpsilon());
                     }
                 }
 
             }
         }
 
-        public void GenerateFollowSets2()
-        {
-            /*
-             * To compute FOLLOW(A) for all nonterminals A, apply the following rules
-                until nothing can be added to any FOLLOW set.
-                1. Place $ in FOLLOW(S), where S is the start symbol, and $ is the input
-                    right endmarker.
-                2. If there is a production A -+ aBC, then everything in FIRST(C) except EPSILON
-                    is in FOLLOW(B).
-                3. If there is a production A -+ aB, or a production A -> aBc, where
-                    FIRST(c) contains EPSILON, then everything in FOLLOW(A) is in FOLLOW(B).
-             */
-            
-            FollowSets = new Dictionary<Symbol, HashSet<Symbol>>();
-
-            foreach (var symbol in Symbols)
-            {
-                FollowSets.Add(symbol, new HashSet<Symbol>());
-            }
-
-            // Add $ in FOLLOW(S)
-
-            var initialRule = ProductionRules.First();
-            FollowSets[initialRule.Header].Add(new Symbol(Symbol.SymTypes.EOS, "$"));
-
-            // Apply rule 2
-            foreach (var productionRule in ProductionRules)
-            {
-                for (int i = 0; i < productionRule.Body.Count - 1; i++)
-                {
-                    var currentSymbol = productionRule.Body[i];
-                    var nextSymbol = productionRule.Body[i + 1];
-                    FollowSets[currentSymbol].UnionWith(FirstSets[nextSymbol]);
-                    FollowSets[currentSymbol].RemoveWhere(s => s.IsEpsilon());
-                }
-            }
-           
-            var changeHasOccurred = true;
-            while (changeHasOccurred)
-            {
-                changeHasOccurred = false;
-
-                foreach (var productionRule in ProductionRules)
-                {
-              
-                    for (int i = productionRule.Body.Count - 1; i >= 0; i--)
-                    {
-                        var setOfBeta = FollowSets[productionRule.Body[i]];
-                        var setToAdd = FollowSets[productionRule.Header];
-
-                        if (!setOfBeta.IsSubsetOf(setToAdd))
-                            changeHasOccurred = true;
-
-                        setOfBeta.UnionWith(setToAdd);
-
-                        if (!FirstSets[productionRule.Body[i]].Any(e => e.IsEpsilon())) ;
-                            break;
-                    }   
-                }
-
-            }
-        }
-
-        public void GenerateFirstSets()
+        private void GenerateFirstSets()
         {
             // Initialize empty sets and terminal symbols
             FirstSets = new Dictionary<Symbol, HashSet<Symbol>>();
