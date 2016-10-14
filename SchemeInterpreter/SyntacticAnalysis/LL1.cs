@@ -34,7 +34,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             for (var i = 0; i < nonTerminal.Length;i++)
                 _nonTerminalLookUp.Add(nonTerminal[i], i);
 
-            _table = new int[terminals.Length,nonTerminal.Length];
+            _table = new int[terminals.Length+1,nonTerminal.Length];
             
             //Get start production (first head of production)
             _start = g.ProductionRules[0].Header;

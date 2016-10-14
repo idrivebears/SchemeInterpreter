@@ -68,6 +68,10 @@ namespace SchemeInterpreterTest.SyntacticAnalysis
 
             var ll1 = new LL1(g);
             Assert.IsTrue(ll1.Accept("qnt"));
+            Assert.IsTrue(ll1.Accept("tnnnnnnnnt"));
+            Assert.IsTrue(ll1.Accept("qt"));
+            Assert.IsTrue(!ll1.Accept("qnru"));
+            Assert.IsTrue(!ll1.Accept("t"));
             Assert.IsTrue(!ll1.Accept("urt"));
         }
     }
