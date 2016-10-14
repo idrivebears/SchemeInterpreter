@@ -44,14 +44,19 @@ namespace SchemeInterpreter.Structures
             return string.Format("Symbol: Type: {0}, Value: {1}", Type, Value);
         }
 
-        public bool Equals(Symbol other)
+        public override bool Equals(object obj)
         {
             //symbol equality
+            var other = obj as Symbol;
+            if (other == null)
+                return base.Equals(obj);
+
             if (IsEOS() && other.IsEOS())
                 return true;
-            if (IsEpsilon() && other.IsEpsilon() || IsEOS() && other.IsEOS())
+            if ((IsEpsilon() && other.IsEpsilon()) || (IsEOS() && other.IsEOS()))
                 return true;
             var ret = Type == other.Type && Value == other.Value;
+
             return ret;
         }
 

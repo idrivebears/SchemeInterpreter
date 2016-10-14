@@ -7,7 +7,7 @@ using SchemeInterpreter.Structures;
 
 namespace SchemeInterpreter.SyntacticAnalysis
 {
-    class LL1
+    public class LL1
     {
         private readonly int[,] _table;
         private readonly Dictionary<Symbol, int> _terminalLookup;
@@ -83,16 +83,18 @@ namespace SchemeInterpreter.SyntacticAnalysis
                     return false; //symbols are terminal, but they do not match, reject string
                 else
                 {
-                    var nextProductionId = _table[_terminalLookup[inputSymbol], _nonTerminalLookUp[stackSymbol]];
+                    var inputS = _terminalLookup[inputSymbol];
+                    var stackS = _nonTerminalLookUp[stackSymbol];
+                    var nextProductionId = _table[inputS, stackS];
                     //check for undefined productions
                     if (nextProductionId == 0)
                         return false; //transition is not defined for given pair
                     var nextProduction = _coreGrammar.ProductionRules[nextProductionId-1];
                     //push body to stack
-                    if(nextProduction.Body.First().IsTerminal())
+                    if(nextProduction.Body.First().IsEpsilon())
                         continue;
-                    foreach (var sym in nextProduction.Body)
-                        symStack.Push(sym);
+                    for(var i=nextProduction.Body.Count-1; i >= 0; i--)
+                        symStack.Push(nextProduction.Body[i]);
                 }
             }
             return symStack.Count == 0 && symStack.Count == inputQueue.Count; //accept if empty stack and queue, reject otherwise

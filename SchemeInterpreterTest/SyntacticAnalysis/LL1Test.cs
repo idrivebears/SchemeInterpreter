@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SchemeInterpreter.Structures;
+using SchemeInterpreter.SyntacticAnalysis;
 
 namespace SchemeInterpreterTest.SyntacticAnalysis
 {
     [TestClass]
     public class LL1Test
     {
-        private Grammar g;
-        private Dictionary<string, Symbol> symbols;
-
-        public void LL1TableTest()
+        [TestMethod]
+        public void TestLlAcceptor()
         {
+            Grammar g;
+            Dictionary<string, Symbol> symbols;
+
             symbols = new Dictionary<string, Symbol>
             {
                 {"S", new Symbol(Symbol.SymTypes.NoTerminal, "S")},
@@ -42,7 +44,7 @@ namespace SchemeInterpreterTest.SyntacticAnalysis
             productionRule = new ProductionRule(symbols["P"], productionRuleBody);
             productionRules.Add(productionRule);
 
-            productionRuleBody = new List<Symbol> { symbols["n"], symbols["E"]};
+            productionRuleBody = new List<Symbol> { symbols["n"], symbols["E"] };
             productionRule = new ProductionRule(symbols["M"], productionRuleBody);
             productionRules.Add(productionRule);
 
@@ -50,7 +52,7 @@ namespace SchemeInterpreterTest.SyntacticAnalysis
             productionRule = new ProductionRule(symbols["M"], productionRuleBody);
             productionRules.Add(productionRule);
 
-            productionRuleBody = new List<Symbol> { symbols["r"] , symbols["K"] };
+            productionRuleBody = new List<Symbol> { symbols["r"], symbols["K"] };
             productionRule = new ProductionRule(symbols["E"], productionRuleBody);
             productionRules.Add(productionRule);
 
@@ -58,11 +60,15 @@ namespace SchemeInterpreterTest.SyntacticAnalysis
             productionRule = new ProductionRule(symbols["E"], productionRuleBody);
             productionRules.Add(productionRule);
 
-            productionRuleBody = new List<Symbol> { symbols["u"] , symbols["K"]};
+            productionRuleBody = new List<Symbol> { symbols["u"], symbols["K"] };
             productionRule = new ProductionRule(symbols["K"], productionRuleBody);
             productionRules.Add(productionRule);
 
             g = new Grammar(productionRules, symbols.Values.ToList());
+
+            var ll1 = new LL1(g);
+            Assert.IsTrue(ll1.Accept("qnt"));
+            Assert.IsTrue(!ll1.Accept("urt"));
         }
     }
 }
