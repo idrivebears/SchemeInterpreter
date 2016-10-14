@@ -51,11 +51,11 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 {
                     var focusFollow = g.FollowSets[g.ProductionRules[i].Header];
                     foreach (var term in focusFollow)
-                        _table[_terminalLookup[term], _nonTerminalLookUp[g.ProductionRules[i].Header]] = i+1;
+                        _table[_terminalLookup[term], _nonTerminalLookUp[g.ProductionRules[i].Header]] = i + 1;
                 }
-                
-                foreach (var term in focusFirst)
-                    _table[_terminalLookup[term], _nonTerminalLookUp[g.ProductionRules[i].Header]] = i+1;
+                else
+                    foreach (var term in focusFirst)
+                        _table[_terminalLookup[term], _nonTerminalLookUp[g.ProductionRules[i].Header]] = i + 1;      
             }
         }
 

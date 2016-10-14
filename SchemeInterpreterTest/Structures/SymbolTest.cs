@@ -64,9 +64,9 @@ namespace SchemeInterpreterTest.Structures
         {
             HashSet<Symbol> set = new HashSet<Symbol>();
 
-            set.Add(new Symbol(Symbol.SymTypes.Terminal, "EPSILON"));
+            set.Add(new Symbol(Symbol.SymTypes.Epsilon, "EPSILON"));
 
-            Assert.IsFalse(set.Contains(new Symbol(Symbol.SymTypes.Terminal, "EPSILON")));
+            Assert.IsTrue(set.Contains(new Symbol(Symbol.SymTypes.Epsilon, "EPSILON")));
 
         }
 
