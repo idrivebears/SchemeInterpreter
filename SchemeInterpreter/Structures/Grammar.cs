@@ -123,18 +123,18 @@ namespace SchemeInterpreter.Structures
 
                 foreach (var productionRule in ProductionRules)
                 {
-              
+        
                     for (int i = productionRule.Body.Count - 1; i >= 0; i--)
                     {
                         var setOfBeta = FollowSets[productionRule.Body[i]];
                         var setToAdd = FollowSets[productionRule.Header];
 
-                        if (!setOfBeta.IsSubsetOf(setToAdd))
+                        if (!setToAdd.IsSubsetOf(setOfBeta))
                             changeHasOccurred = true;
 
-                        setOfBeta.UnionWith(setToAdd);
+                        FollowSets[productionRule.Body[i]].UnionWith(FollowSets[productionRule.Header]);
 
-                        if (!FirstSets[productionRule.Body[i]].Any(e => e.IsEpsilon())) ;
+                        if (!FirstSets[productionRule.Body[i]].Any(e => e.IsEpsilon()))
                             break;
                     }   
                 }

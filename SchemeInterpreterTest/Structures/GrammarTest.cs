@@ -18,10 +18,11 @@ namespace SchemeInterpreterTest.Structures
              * E    ->  T E'
              * E'   ->  + T E'
              * E'   ->  eps
-             * T    ->  * F T'
+             * T    ->  F T'
+             * T'   ->  * F T'
              * T'   ->  eps
              * F    ->  ( E )
-             * F    ->  if
+             * F    ->  id
              */
 
             /* No terminal symbols
@@ -145,9 +146,12 @@ namespace SchemeInterpreterTest.Structures
             grammar.GenerateFirstSets();
             grammar.GenerateFollowSets();
 
-            var testFollowSet = new Dictionary<Symbol, HashSet<Symbol>>();
-
-            
+            var followOfE = new HashSet<Symbol>
+            {
+                symbols[")"],
+                symbols["$"]
+            };
+            Assert.IsTrue(grammar.FirstSets[symbols["E"]].SetEquals(followOfE));
         }
 
     }

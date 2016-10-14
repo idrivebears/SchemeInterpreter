@@ -44,17 +44,20 @@ namespace SchemeInterpreter.Structures
             return string.Format("Symbol: Type: {0}, Value: {1}", Type, Value);
         }
 
-        public override bool Equals(object obj)
+        public bool Equals(Symbol other)
         {
-            var otherSym = obj as Symbol;
-            if (otherSym != null)
-            {
-                //symbol equality
-                if (IsEpsilon() && otherSym.IsEpsilon() || IsEOS() && otherSym.IsEOS())
-                    return true;
-                return Type == otherSym.Type && Value == otherSym.Value;
-            }
-            return base.Equals(obj);
+            //symbol equality
+            if (IsEOS() && other.IsEOS())
+                return true;
+            if (IsEpsilon() && other.IsEpsilon() || IsEOS() && other.IsEOS())
+                return true;
+            var ret = Type == other.Type && Value == other.Value;
+            return ret;
+        }
+
+        public override int GetHashCode()
+        {
+            return Value.GetHashCode();
         }
     }
 }
