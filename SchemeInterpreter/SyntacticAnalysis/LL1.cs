@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SchemeInterpreter.LexerEngine;
 using SchemeInterpreter.Structures;
 
 namespace SchemeInterpreter.SyntacticAnalysis
@@ -61,14 +63,20 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
         public bool Accept(string input)
         {
+            /*Generate tokens*/
+            var lexer = LexerGenerator.Generate("entrega.miniflex");
+            var tokens = lexer.Tokenize(input);
+
             var symStack = new Stack<Symbol>();
             var inputQueue = new Queue<Symbol>();
 
             symStack.Push(new Symbol(Symbol.SymTypes.EOS, "$"));
             symStack.Push(_start); //initialize eval stack
 
-            foreach (var c in input)
-                inputQueue.Enqueue(new Symbol(Symbol.SymTypes.Terminal, c.ToString())); 
+            foreach (var token in tokens)
+                if (token.Type != "(end)" && token.Type != "(white-space)")
+                    inputQueue.Enqueue(new Symbol(Symbol.SymTypes.Terminal, token.Value));
+
             inputQueue.Enqueue(new Symbol(Symbol.SymTypes.EOS, "$")); //initialize input queue
 
             while (symStack.Count != 0 && inputQueue.Count != 0)

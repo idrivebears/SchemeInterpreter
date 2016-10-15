@@ -14,16 +14,7 @@ namespace SchemeInterpreter
     {
         static void Main(string[] args)
         {
-            
-            var lexer = LexerGenerator.Generate("camTest.miniflex");
-            var source = File.ReadAllText("source.ss");
-            var tokens = lexer.Tokenize(source);
-            foreach (var token in tokens)
-                Console.WriteLine("Type::'{0}' Value::{1}", token.Type, token.Value);
-
-            Console.WriteLine("Press ENTER to quit.");
-            Console.ReadLine();
-
+            Console.WriteLine("It runs!");
         }
     }
 }
