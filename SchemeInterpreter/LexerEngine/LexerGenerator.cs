@@ -28,15 +28,15 @@ namespace SchemeInterpreter.LexerEngine
         {
             if (!filename.Contains(".miniflex"))
                 throw new FileLoadException("File not supported");
-
+            var lexContent = File.ReadAllLines(filename);
             try
             {
-                var lexContent = File.ReadAllLines(filename);
+                
                 var lexer = new LexerEngine.Lexer();
                 foreach (var line in lexContent)
                 {
                     var newMember = GetMember(line);
-                    Console.WriteLine("Added Toke: {0} Rule {1}", newMember.Item1,@newMember.Item2);
+                    Console.WriteLine("Added Token: {0} Rule {1}", newMember.Item1,@newMember.Item2);
 
                     lexer.AddDefinition(new TokenDefinition(newMember.Item1, new Regex(@newMember.Item2)));
                 }

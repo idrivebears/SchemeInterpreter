@@ -41,7 +41,8 @@ namespace SchemeInterpreter.Structures
 
         public override string ToString()
         {
-            return string.Format("Symbol: Type: {0}, Value: {1}", Type, Value);
+            /*return string.Format("Symbol: Type: {0}, Value: {1}", Type, Value);*/
+            return string.Format("Symbol: {0}", Value);
         }
 
         public override bool Equals(object obj)

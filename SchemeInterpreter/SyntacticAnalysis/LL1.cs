@@ -75,20 +75,33 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
             foreach (var token in tokens)
                 if (token.Type != "(end)" && token.Type != "(white-space)")
-                    inputQueue.Enqueue(new Symbol(Symbol.SymTypes.Terminal, token.Value));
+                    inputQueue.Enqueue(new Symbol(Symbol.SymTypes.Terminal, token.Type.Replace("(","").Replace(")","").Replace("]",")").Replace("[","(")));
 
             inputQueue.Enqueue(new Symbol(Symbol.SymTypes.EOS, "$")); //initialize input queue
 
+            /*Debug*/
+            var outputQueue = new Queue<Symbol>();
+
             while (symStack.Count != 0 && inputQueue.Count != 0)
             {
+                /* Debug */
+                Console.WriteLine("\nSymbols stack:\n\t " + String.Join(", ", symStack.Select(x => x)) + 
+                    "\n Input queue: \n\t" + String.Join(", ", inputQueue.Select(x => x)) +
+                    "\n Coincidence: \n\t" + String.Join(", ", outputQueue.Select(x => x) ));
+
                 var stackSymbol = symStack.Pop();
                 var inputSymbol = inputQueue.Peek();
 
                 //check for collapsing conditions
                 if (Equals(stackSymbol, inputSymbol))
+                {
+                    outputQueue.Enqueue(inputQueue.Peek());
                     inputQueue.Dequeue(); //remove symbol from input
+                } 
                 else if (stackSymbol.IsTerminal() && inputSymbol.IsTerminal() && !Equals(stackSymbol, inputSymbol))
+                {
                     return false; //symbols are terminal, but they do not match, reject string
+                }
                 else
                 {
                     var inputS = _terminalLookup[inputSymbol];
