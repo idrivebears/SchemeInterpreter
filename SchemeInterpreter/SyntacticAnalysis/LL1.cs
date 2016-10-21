@@ -85,9 +85,9 @@ namespace SchemeInterpreter.SyntacticAnalysis
             while (symStack.Count != 0 && inputQueue.Count != 0)
             {
                 /* Debug */
-                Console.WriteLine("\nSymbols stack:\n\t " + String.Join(", ", symStack.Select(x => x)) + 
-                    "\n Input queue: \n\t" + String.Join(", ", inputQueue.Select(x => x)) +
-                    "\n Coincidence: \n\t" + String.Join(", ", outputQueue.Select(x => x) ));
+                Console.WriteLine("\nSymbols stack:\t " + String.Join(", ", symStack.Select(x => x)) + 
+                    "\n Input queue: \t" + String.Join(", ", inputQueue.Select(x => x)) +
+                    "\n Coincidence: \t" + String.Join(", ", outputQueue.Select(x => x) ));
 
                 var stackSymbol = symStack.Pop();
                 var inputSymbol = inputQueue.Peek();
