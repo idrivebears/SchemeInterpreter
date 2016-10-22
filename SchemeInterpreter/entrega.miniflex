@@ -1,4 +1,4 @@
 (white-space):"\s+";
-(Operator):"[\+\*]";
-(Delimiter):"([()])";
-(Id):"id";
+(a):"a";
+(b):"b";
+(c):"c";
