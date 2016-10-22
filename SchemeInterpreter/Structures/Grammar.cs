@@ -51,7 +51,7 @@ namespace SchemeInterpreter.Structures
 
                 foreach (var rule in ProductionRules)
                 {
-                    if (rule.Body.Contains(currentHeader) && rule.Header != currentHeader)
+                    if (rule.Body.Contains(currentHeader) /*&& rule.Header != currentHeader*/)
                     {
                         //Check next element in line
                         var occurance = rule.Body.IndexOf(currentHeader);
