@@ -53,6 +53,8 @@
     <Compile Include="Structures\ProductionRule.cs" />
     <Compile Include="Structures\Symbol.cs" />
     <Compile Include="SyntacticAnalysis\LL1.cs" />
+    <Compile Include="SyntacticAnalysis\LR1.cs" />
+    <Compile Include="SyntacticAnalysis\LR1AutomataState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
