@@ -20,18 +20,40 @@ namespace SchemeInterpreter.SyntacticAnalysis
             BuildAutomata();
         }
 
+        // Add handling of end of string
         private void BuildAutomata()
         {
             var automata = new Dictionary<ProductionRule, LR1AutomataState>();
 
-            //Start with first statezs
-            var firstState = new LR1AutomataState(0, _grammar.ProductionRules.First(), _grammar.ProductionRules);
+            //Start with first states
+            var firstState = new LR1AutomataState(0, _grammar.ProductionRules.First(), new List<ProductionRule>());
+            firstState.Contents.Add(firstState.Header);
             automata.Add(firstState.Header, firstState);
 
             while (automata.Any(s => s.Value.Explored == false))
             {
                 var state = automata.First(s => s.Value.Explored == false);
 
+                // First step is to generate state contents
+                foreach (var rule in state.Value.Contents)
+                {
+                    if (rule.Caret != rule.Body.Count)
+                    {
+                        var symbolRead = rule.Body.ElementAt(rule.Caret + 1);
+                        if (symbolRead.IsNonTerminal())
+                        {
+                            // Add all productions of symbol, unrepeated
+                            var foundOcurrances = _grammar.ProductionRules.FindAll(r => r.Header == symbolRead);
+                            foreach (var occurrance in foundOcurrances)
+                            {
+                                if (!state.Value.Contents.Contains(occurrance))
+                                    state.Value.Contents.Add(occurrance);
+                            }
+                        }
+                    }
+                }
+
+                // Check each rule in the state, generating or linking to the transition states
                 foreach (var rule in state.Value.Contents)
                 {
                     //If caret is not at the end of the body
@@ -70,6 +92,8 @@ namespace SchemeInterpreter.SyntacticAnalysis
                         }
                     }
                 }
+
+                state.Value.Explored = true;
             }
         }
     }
