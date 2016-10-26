@@ -12,7 +12,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
     {
         public ProductionRule Header;
         public List<ProductionRule> Contents { get; set; }
-        public List<Tuple<Symbol,int>> Transitions { get; set; }
+        public Dictionary<Symbol, int> Transitions { get; set; }
         public int StateName;
         public  bool Explored = false;
 
