@@ -22,18 +22,17 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
         private void BuildAutomata()
         {
-            var automata = new Dictionary<int, LR1AutomataState>();
+            var automata = new Dictionary<ProductionRule, LR1AutomataState>();
 
             //Start with first statezs
             var firstState = new LR1AutomataState(0, _grammar.ProductionRules.First(), _grammar.ProductionRules);
-            automata.Add(firstState.StateName, firstState);
+            automata.Add(firstState.Header, firstState);
 
-            
             while (automata.Any(s => s.Value.Explored == false))
             {
-                var state = automata.First(s => s.Value.Explored == false).Value;
+                var state = automata.First(s => s.Value.Explored == false);
 
-                foreach (var rule in state.Contents)
+                foreach (var rule in state.Value.Contents)
                 {
                     //If caret is not at the end of the body
                     if (rule.Caret != rule.Body.Count)
@@ -44,25 +43,29 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
                         // Generate new state with rule as header only if state doesnt previously exist
                         // Transition already exists, therefore state also exists
-                        if (state.Transitions.ContainsKey(readSymbol))
+                        if (state.Value.Transitions.ContainsKey(readSymbol))
                         {
-
+                            var nextStateHeader = state.Value.Transitions[readSymbol];
+                            automata[nextStateHeader].Contents.Add(rule);
                         }
                         // Transition doesnt exist
                         else
                         {
                             // If state already exists
-                            if (automata.Any(s => s.Value.Header.Equals(rule)))
+                            if (automata.ContainsKey(rule))
                             {
-                                automata[state.StateName].Contents.Add(rule);
-                                //automata[state.StateName].Transitions.Add();
+                                // Add transition to the state
+                                state.Value.Transitions.Add(readSymbol, rule);
                             }
                             // State doesnt exist
                             else
                             {
-                                var newStateName = state.StateName + 1;
-                                automata.Add(newStateName, new LR1AutomataState(newStateName, rule, new List<ProductionRule>()));
-                                automata[newStateName].Contents.Add(rule);
+                                var newStateName = state.Value.StateName + 1;
+                                automata.Add(rule, new LR1AutomataState(newStateName, rule, new List<ProductionRule>()));
+                                automata[rule].Contents.Add(rule);
+
+                                // add transition
+                                state.Value.Transitions.Add(readSymbol, rule);
                             }
                         }
                     }
