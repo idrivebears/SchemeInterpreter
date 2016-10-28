@@ -44,6 +44,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
         public LR1Table(Grammar g)
         {
             _grammar = g; //consider building a new grammar, not just stealing the pointer (as LL1).
+            _grammar.GenerateFirstAndFollow();
             _terminalLookup = new Dictionary<Symbol, int>();
             _gotoLookup = new Dictionary<Tuple<Symbol, int>, int>();
             _lr1 = new LR1(g);
@@ -53,7 +54,8 @@ namespace SchemeInterpreter.SyntacticAnalysis
             var terminals = (_grammar.Symbols.Where(x => x.IsTerminal())).ToArray();
             var nonTerminals = (_grammar.Symbols.Where(x => x.IsNonTerminal())).ToArray();
 
-            var maxState = _lr1.AutomataStates.Keys.Count;
+            acceptanceState = _lr1.AutomataStates.Keys.Count-1;
+            var maxState = acceptanceState;
 
             for(var i=0; i<terminals.Length;i++)
                 _terminalLookup.Add(terminals[i], i);
@@ -70,13 +72,17 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 //set reduce Actions
                 var reduceRule = focusState.RuleToReduce;
 
-                if(reduceRule != null)
+                if (reduceRule != null)
+                {
+                    reduceRule.Caret = 0; //reset the caret
                     for (var j = 0; j < _grammar.ProductionRules.Count; j++)
                     {
                         if (!_grammar.ProductionRules[j].Equals(reduceRule)) continue;
                         foreach (var follow in g.FollowSets[focusState.Header.Header])
                             _table[_terminalLookup[follow], focusState.StateName] = new Action(ActionTypes.Reduce, j);
+                        break;
                     }
+                }
                 //set shift Actions
 
                 foreach (var term in _terminalLookup.Keys.Where(term => focusState.PublicTransitions.ContainsKey(term)))
@@ -99,17 +105,19 @@ namespace SchemeInterpreter.SyntacticAnalysis
             var lexer = LexerGenerator.Generate("LR.miniflex"); //Rembebr to change lexer
             var tokens = lexer.Tokenize(input);
             foreach (var token in tokens)
-                inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.Terminal, token.Value, token.Type));
+                if (token.Type != "(end)")
+                    inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.Terminal, token.Value, token.Type));
 
+            inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.EOS, "$", "EoS"));
             //Initialize stacks
             stateStack.Push(0); //state 0 is init state
 
-            while (stateStack.Peek() != 0)
+            while (stateStack.Peek() != acceptanceState)
             {
                 var focusState = stateStack.Peek();
                 var focusSym = inputQueue.Peek();
 
-                var focusAction = _table[focusState, _terminalLookup[focusSym]];
+                var focusAction = _table[_terminalLookup[focusSym], focusState];
 
                 if (focusAction == null)
                     return false; //Action is not defined for the current state and terminal.
@@ -130,7 +138,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                         for (var i = 0; i < productionSize; i++)
                         {
                             stateStack.Pop(); //pop n elements, where n is the size of the production body
-                            inputQueue.Dequeue();
+                            symbolStack.Pop();
                         }
                         symbolStack.Push(_grammar.ProductionRules[focusAction.ActionVal].Header); //push production header
                         //Goto next state
