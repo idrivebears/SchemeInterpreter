@@ -8,7 +8,7 @@ using SchemeInterpreter.Structures;
 
 namespace SchemeInterpreter.SyntacticAnalysis
 {
-    class LR1Table
+    public class LR1Table
     {
         public enum ActionTypes {Shift, Reduce};
 
@@ -77,12 +77,12 @@ namespace SchemeInterpreter.SyntacticAnalysis
                             _table[_terminalLookup[follow], focusState.StateName] = new Action(ActionTypes.Reduce, j);
                     }
                 //set shift Actions
-                
-                foreach (var term in _terminalLookup.Keys)
-                    _table[_terminalLookup[term], focusState.StateName] = new Action(ActionTypes.Shift, focusState.PublicTransitions[term]);
+
+                foreach (var term in _terminalLookup.Keys.Where(term => focusState.PublicTransitions.ContainsKey(term)))
+                    _table[_terminalLookup[term], focusState.StateName] = new Action(ActionTypes.Shift, focusState.PublicTransitions[term]); 
 
                 //set goto lookup
-                foreach (var nonTerm in nonTerminals)
+                foreach (var nonTerm in nonTerminals.Where(nonTerm => focusState.PublicTransitions.ContainsKey(nonTerm)))
                     _gotoLookup[new Tuple<Symbol, int>(nonTerm, focusState.StateName)] =
                         focusState.PublicTransitions[nonTerm];
             }
@@ -95,7 +95,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             var inputQueue = new Queue<ExtendedSymbol>();
 
             //build input queue
-            var lexer = LexerGenerator.Generate("entrega.miniflex"); //Rembebr to change lexer
+            var lexer = LexerGenerator.Generate("LR.miniflex"); //Rembebr to change lexer
             var tokens = lexer.Tokenize(input);
             foreach (var token in tokens)
                 inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.Terminal, token.Value, token.Type));
@@ -103,7 +103,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             //Initialize stacks
             stateStack.Push(0); //state 0 is init state
 
-            while (stateStack.Peek() != 1)
+            while (stateStack.Peek() != 747)
             {
                 var focusState = stateStack.Peek();
                 var focusSym = inputQueue.Peek();
