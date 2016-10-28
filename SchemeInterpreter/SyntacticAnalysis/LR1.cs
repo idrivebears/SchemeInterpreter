@@ -107,9 +107,12 @@ namespace SchemeInterpreter.SyntacticAnalysis
         private void GenerateAutomataStates()
         {
             AutomataStates = new Dictionary<int, LR1AutomataState>();
+            int uniqueID = 0;
+
             foreach (var lr1AutomataState in _automata.Values)
             {
-                AutomataStates.Add(lr1AutomataState.StateName,lr1AutomataState);
+                lr1AutomataState.StateName = uniqueID;
+                AutomataStates.Add(uniqueID++, lr1AutomataState);
             }
         }
 
