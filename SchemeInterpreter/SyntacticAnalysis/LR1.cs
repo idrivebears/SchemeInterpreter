@@ -12,13 +12,15 @@ namespace SchemeInterpreter.SyntacticAnalysis
     public class LR1
     {
 
-        Grammar _grammar;
+        private Grammar _grammar;
         public Dictionary<ProductionRule, LR1AutomataState> _automata { get; private set; }
+        public Dictionary<int, LR1AutomataState> AutomataStates { get; private set; }
 
-        public LR1(Grammar g)
+    public LR1(Grammar g)
         {
             _grammar = g;
             BuildAutomata();
+            GenerateAutomataStates();
         }
 
         // Add handling of end of string
@@ -107,5 +109,18 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 state.Value.Explored = true;
             }
         }
+
+        private void GenerateAutomataStates()
+        {
+            AutomataStates = new Dictionary<int, LR1AutomataState>();
+            int uniqueID = 0;
+
+            foreach (var lr1AutomataState in _automata.Values)
+            {
+                lr1AutomataState.StateName = uniqueID;
+                AutomataStates.Add(uniqueID++, lr1AutomataState);
+            }
+        }
+
     }
 }
