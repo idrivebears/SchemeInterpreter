@@ -69,12 +69,12 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 //set reduce Actions
                 var reduceRule = focusState.RuleToReduce;
 
-                if(!reduceRule == null)
+                if(reduceRule != null)
                     for (var j = 0; j < _grammar.ProductionRules.Count; j++)
                     {
-                        if (_grammar.ProductionRules[j].Equals(reduceRule))
-                            foreach (var follow in g.FollowSets[focusState.Header.Header])
-                                _table[_terminalLookup[follow], focusState.StateName] = new Action(ActionTypes.Reduce, j);
+                        if (!_grammar.ProductionRules[j].Equals(reduceRule)) continue;
+                        foreach (var follow in g.FollowSets[focusState.Header.Header])
+                            _table[_terminalLookup[follow], focusState.StateName] = new Action(ActionTypes.Reduce, j);
                     }
                 //set shift Actions
                 
