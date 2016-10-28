@@ -167,6 +167,8 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
             }
 
+            AutomataStates[0].PublicTransitions[AutomataStates[0].Header.Header] = AutomataStates.Count - 1;
+
         }
 
     }
