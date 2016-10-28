@@ -27,7 +27,8 @@ namespace SchemeInterpreterTest.SyntacticAnalysis
                 {"n", new Symbol(Symbol.SymTypes.Terminal, "n")},
                 {"t", new Symbol(Symbol.SymTypes.Terminal, "t")},
                 {"r", new Symbol(Symbol.SymTypes.Terminal, "r")},
-                {"u", new Symbol(Symbol.SymTypes.Terminal, "u")}
+                {"u", new Symbol(Symbol.SymTypes.Terminal, "u")},
+                {"EPSILON", new Symbol(Symbol.SymTypes.Epsilon, "EPSILON")}
             };
 
             var productionRules = new List<ProductionRule>();
@@ -49,6 +50,10 @@ namespace SchemeInterpreterTest.SyntacticAnalysis
             productionRules.Add(productionRule);
 
             productionRuleBody = new List<Symbol> { symbols["t"]};
+            productionRule = new ProductionRule(symbols["M"], productionRuleBody);
+            productionRules.Add(productionRule);
+
+            productionRuleBody = new List<Symbol> { symbols["EPSILON"] };
             productionRule = new ProductionRule(symbols["M"], productionRuleBody);
             productionRules.Add(productionRule);
 

@@ -9,6 +9,12 @@ using SchemeInterpreter.Structures;
 namespace SchemeInterpreter.SyntacticAnalysis
 {
     //Left at: create new state into automata
+
+        /*
+         Todo add epsilon
+         Add reduce rule marking
+         Add eos
+         */
     public class LR1
     {
 
@@ -16,7 +22,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
         public Dictionary<ProductionRule, LR1AutomataState> _automata { get; private set; }
         public Dictionary<int, LR1AutomataState> AutomataStates { get; private set; }
 
-    public LR1(Grammar g)
+        public LR1(Grammar g)
         {
             _grammar = g;
             BuildAutomata();
@@ -42,7 +48,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 // be done somehow else
                 var rulesToCheck = new Queue<ProductionRule>(state.Value.Contents.ToList());
 
-                while (rulesToCheck.Count > 0) 
+                while (rulesToCheck.Count > 0)
                 {
                     var currentRule = rulesToCheck.Dequeue();
                     if (currentRule.Caret < currentRule.Body.Count)
@@ -56,8 +62,18 @@ namespace SchemeInterpreter.SyntacticAnalysis
                             {
                                 if (!state.Value.Contents.Contains(occurrance))
                                 {
-                                    rulesToCheck.Enqueue(occurrance);
-                                    state.Value.Contents.Add(occurrance);
+                                    if (!occurrance.Body.Any(s => s.IsEpsilon()))
+                                    {
+                                        rulesToCheck.Enqueue(occurrance);
+                                        state.Value.Contents.Add(occurrance);
+                                    }
+                                    else
+                                    {
+                                        var tempNewRule = new ProductionRule(occurrance);
+                                        tempNewRule.Caret++;
+                                        state.Value.Contents.Add(tempNewRule);
+                                        state.Value.RuleToReduce = tempNewRule;
+                                    }
                                 }
                             }
                         }
@@ -104,6 +120,11 @@ namespace SchemeInterpreter.SyntacticAnalysis
                             }
                         }
                     }
+                }
+
+                if (state.Value.Contents.Count == 1 && state.Value.KernelTransitions.Count == 0)
+                {
+                    state.Value.RuleToReduce = state.Value.Contents[0];
                 }
 
                 state.Value.Explored = true;
