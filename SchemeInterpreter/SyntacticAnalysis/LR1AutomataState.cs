@@ -14,13 +14,21 @@ namespace SchemeInterpreter.SyntacticAnalysis
         public List<ProductionRule> Contents { get; set; }
         public Dictionary<Symbol, ProductionRule> Transitions { get; set; }
         public int StateName;
-        public  bool Explored = false;
+        public bool Explored { get; set; }
 
-        public LR1AutomataState(int stateName, ProductionRule header, List<ProductionRule> contents)
+        public LR1AutomataState(int stateName, ProductionRule header, List<ProductionRule> contents = null, Dictionary<Symbol, ProductionRule> transitions = null)
         {
             StateName = stateName;
             Header = header;
+            Explored = false;
+
             Contents = contents;
+            if (Contents == null)
+                Contents = new List<ProductionRule>();
+
+            Transitions = transitions;
+            if(Transitions == null)
+                Transitions = new Dictionary<Symbol, ProductionRule>();
         }
     }
 }

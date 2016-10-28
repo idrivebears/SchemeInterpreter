@@ -27,7 +27,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             _automata = new Dictionary<ProductionRule, LR1AutomataState>();
 
             //Start with first states
-            var firstState = new LR1AutomataState(0, _grammar.ProductionRules.First(), new List<ProductionRule>());
+            var firstState = new LR1AutomataState(0, _grammar.ProductionRules.First());
             firstState.Contents.Add(firstState.Header);
             _automata.Add(firstState.Header, firstState);
 
@@ -36,9 +36,11 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 var state = _automata.First(s => s.Value.Explored == false);
 
                 // First step is to generate state contents
-                foreach (var rule in state.Value.Contents)
+                // **.ToList() is used to make a copy of the List, not very efficient, should
+                // be done somehow else
+                foreach (var rule in state.Value.Contents.ToList())
                 {
-                    if (rule.Caret != rule.Body.Count)
+                    if (rule.Caret < rule.Body.Count)
                     {
                         var symbolRead = rule.Body.ElementAt(rule.Caret + 1);
                         if (symbolRead.IsNonTerminal())
@@ -62,33 +64,35 @@ namespace SchemeInterpreter.SyntacticAnalysis
                     {
                         // Read transition symbol
                         var readSymbol = rule.Body.ElementAt(rule.Caret);
-                        rule.Caret++;
+                        var newRule = new ProductionRule(rule);
+                        newRule.Caret++;
+                        
 
                         // Generate new state with rule as header only if state doesnt previously exist
                         // Transition already exists, therefore state also exists
                         if (state.Value.Transitions.ContainsKey(readSymbol))
                         {
                             var nextStateHeader = state.Value.Transitions[readSymbol];
-                            _automata[nextStateHeader].Contents.Add(rule);
+                            _automata[nextStateHeader].Contents.Add(newRule);
                         }
                         // Transition doesnt exist
                         else
                         {
                             // If state already exists
-                            if (_automata.ContainsKey(rule))
+                            if (_automata.ContainsKey(newRule))
                             {
                                 // Add transition to the state
-                                state.Value.Transitions.Add(readSymbol, rule);
+                                state.Value.Transitions.Add(readSymbol, newRule);
                             }
                             // State doesnt exist
                             else
                             {
                                 var newStateName = state.Value.StateName + 1;
-                                _automata.Add(rule, new LR1AutomataState(newStateName, rule, new List<ProductionRule>()));
-                                _automata[rule].Contents.Add(rule);
+                                _automata.Add(newRule, new LR1AutomataState(newStateName, newRule));
+                                _automata[newRule].Contents.Add(newRule);
 
                                 // add transition
-                                state.Value.Transitions.Add(readSymbol, rule);
+                                state.Value.Transitions.Add(readSymbol, newRule);
                             }
                         }
                     }

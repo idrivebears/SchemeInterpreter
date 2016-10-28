@@ -8,22 +8,29 @@ namespace SchemeInterpreter.Structures
 {
     public class ProductionRule
     {
+        
+
+        public Symbol Header { get; set; }
+        public List<Symbol> Body { get; set; }
+        public int Caret { get; set; }
+
         public ProductionRule(Symbol header, List<Symbol> body, int Caret = 0)
         {
             Header = header;
             Body = body;
         }
 
-        public Symbol Header { get; set; }
-        public List<Symbol> Body { get; set; }
-        public int Caret { get; set; }
+        public ProductionRule(ProductionRule productionRule)
+        {
+            Header = productionRule.Header;
+            Body = productionRule.Body;
+            Caret = productionRule.Caret;
+        }
 
         public override bool Equals(object obj)
         {
             var otherRule = obj as ProductionRule;
-            if (otherRule.Header == this.Header && otherRule.Body == this.Body)
-                return true;
-            return false;
+            return (otherRule.Header == Header && otherRule.Body == Body && otherRule.Caret == Caret);
         }
 
         public override string ToString()
