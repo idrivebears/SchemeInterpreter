@@ -41,7 +41,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
         private readonly Action[,] _table;
 
-        public LR1Table(Grammar g, LR1 automata)
+        public LR1Table(Grammar g)
         {
             _grammar = g; //consider building a new grammar, not just stealing the pointer (as LL1).
             _terminalLookup = new Dictionary<Symbol, int>();

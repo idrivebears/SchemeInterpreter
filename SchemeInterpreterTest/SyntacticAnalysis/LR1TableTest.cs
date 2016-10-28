@@ -72,7 +72,7 @@ namespace SchemeInterpreterTest.SyntacticAnalysis
             g = new Grammar(productionRules, symbols.Values.ToList());
 
             //build table
-            var analyzer = new LR1Table(g, new LR1(g));
+            var analyzer = new LR1Table(g);
 
             Assert.IsTrue(analyzer.Accept("qnt"));
         }
