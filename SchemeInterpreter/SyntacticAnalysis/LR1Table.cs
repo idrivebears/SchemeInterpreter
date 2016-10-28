@@ -53,7 +53,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             var terminals = (_grammar.Symbols.Where(x => x.IsTerminal())).ToArray();
             var nonTerminals = (_grammar.Symbols.Where(x => x.IsNonTerminal())).ToArray();
 
-            var maxState = automata.AutomataStates.Keys.Count;
+            var maxState = _lr1.AutomataStates.Keys.Count;
 
             for(var i=0; i<terminals.Length;i++)
                 _terminalLookup.Add(terminals[i], i);
