@@ -55,6 +55,7 @@
     <Compile Include="SyntacticAnalysis\LL1.cs" />
     <Compile Include="SyntacticAnalysis\LR1.cs" />
     <Compile Include="SyntacticAnalysis\LR1AutomataState.cs" />
+    <Compile Include="SyntacticAnalysis\LR1Table.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
