@@ -11,8 +11,6 @@ namespace SchemeInterpreter.SyntacticAnalysis
     //Left at: create new state into automata
 
         /*
-         Todo add epsilon
-         Add reduce rule marking
          Add eos
          */
     public class LR1
@@ -129,6 +127,14 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
                 state.Value.Explored = true;
             }
+
+            // Add acceptance state
+            var accSym = new Symbol(Symbol.SymTypes.EOS, "$");
+
+            var acceptanceState = new LR1AutomataState(_automata.Keys.Count, new ProductionRule(accSym, new List<Symbol>()));
+            _automata.Add(acceptanceState.Header, acceptanceState);
+            _automata[firstState.Header].KernelTransitions.Add(new Symbol(Symbol.SymTypes.NoTerminal, "S"), acceptanceState.Header);
+
         }
 
         private void GenerateAutomataStates()
