@@ -115,11 +115,29 @@ namespace SchemeInterpreter.SyntacticAnalysis
             AutomataStates = new Dictionary<int, LR1AutomataState>();
             int uniqueID = 0;
 
+            // Generate unique ids
             foreach (var lr1AutomataState in _automata.Values)
             {
                 lr1AutomataState.StateName = uniqueID;
                 AutomataStates.Add(uniqueID++, lr1AutomataState);
             }
+
+            // Generate public transitions, accesible by number
+            foreach (var lr1AutomataState in _automata.Values)
+            {
+                lr1AutomataState.PublicTransitions = new Dictionary<Symbol, int>();
+
+                foreach (var transition in lr1AutomataState.Transitions)
+                {
+                    var state = _automata[transition.Value];
+                    var stateIndex = AutomataStates.First(x => x.Value == state).Key;
+                    lr1AutomataState.PublicTransitions.Add(transition.Key, stateIndex);
+                }
+
+            }
+
+
+
         }
 
     }
