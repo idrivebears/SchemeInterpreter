@@ -15,6 +15,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
         private readonly Grammar _grammar;
         private readonly Dictionary<Symbol, int> _terminalLookup;
         private readonly Dictionary<Tuple<Symbol, int>, int> _gotoLookup;
+        private readonly LR1 _lr1;
 
         internal class Action
         {
@@ -44,9 +45,13 @@ namespace SchemeInterpreter.SyntacticAnalysis
             _grammar = g; //consider building a new grammar, not just stealing the pointer (as LL1).
             _terminalLookup = new Dictionary<Symbol, int>();
             _gotoLookup = new Dictionary<Tuple<Symbol, int>, int>();
+            _lr1 = new LR1(g);
+
 
             //Get terminal symbols from grammar
             var terminals = (_grammar.Symbols.Where(x => x.IsTerminal())).ToArray();
+            var nonTerminals = (_grammar.Symbols.Where(x => x.IsNonTerminal())).ToArray();
+
             var maxState = automata.AutomataStates.Keys.Count;
 
             for(var i=0; i<terminals.Length;i++)
@@ -57,8 +62,30 @@ namespace SchemeInterpreter.SyntacticAnalysis
             _table = new Action[_terminalLookup.Count, maxState+1]; //generate Action lookUp table
 
             //Construct the table with the provided automaton
+            for (var i = 0; i < maxState; i++)
+            {
+                var focusState = _lr1.AutomataStates[i]; //get the nth state
 
+                //set reduce Actions
+                var reduceRule = focusState.RuleToReduce;
 
+                if(!reduceRule == null)
+                    for (var j = 0; j < _grammar.ProductionRules.Count; j++)
+                    {
+                        if (_grammar.ProductionRules[j].Equals(reduceRule))
+                            foreach (var follow in g.FollowSets[focusState.Header.Header])
+                                _table[_terminalLookup[follow], focusState.StateName] = new Action(ActionTypes.Reduce, j);
+                    }
+                //set shift Actions
+                
+                foreach (var term in _terminalLookup.Keys)
+                    _table[_terminalLookup[term], focusState.StateName] = new Action(ActionTypes.Shift, focusState.PublicTransitions[term]);
+
+                //set goto lookup
+                foreach (var nonTerm in nonTerminals)
+                    _gotoLookup[new Tuple<Symbol, int>(nonTerm, focusState.StateName)] =
+                        focusState.PublicTransitions[nonTerm];
+            }
         }
 
         public bool Accept(string input)
