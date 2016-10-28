@@ -16,6 +16,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
         private readonly Dictionary<Symbol, int> _terminalLookup;
         private readonly Dictionary<Tuple<Symbol, int>, int> _gotoLookup;
         private readonly LR1 _lr1;
+        private int acceptanceState = -1;
 
         internal class Action
         {
@@ -103,7 +104,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             //Initialize stacks
             stateStack.Push(0); //state 0 is init state
 
-            while (stateStack.Peek() != 747)
+            while (stateStack.Peek() != 0)
             {
                 var focusState = stateStack.Peek();
                 var focusSym = inputQueue.Peek();

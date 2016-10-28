@@ -163,8 +163,6 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
             }
 
-
-
         }
 
     }
