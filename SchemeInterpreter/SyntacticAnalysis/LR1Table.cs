@@ -15,8 +15,8 @@ namespace SchemeInterpreter.SyntacticAnalysis
         private readonly Grammar _grammar;
         private readonly Dictionary<Symbol, int> _terminalLookup;
         private readonly Dictionary<Tuple<Symbol, int>, int> _gotoLookup;
- 
-        private class Action
+
+        internal class Action
         {
             public readonly ActionTypes Type;
             public readonly int ActionVal;
