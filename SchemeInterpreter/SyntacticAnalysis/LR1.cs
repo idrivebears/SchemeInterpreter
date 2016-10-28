@@ -38,11 +38,14 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 // First step is to generate state contents
                 // **.ToList() is used to make a copy of the List, not very efficient, should
                 // be done somehow else
-                foreach (var rule in state.Value.Contents.ToList())
+                var rulesToCheck = new Queue<ProductionRule>(state.Value.Contents.ToList());
+
+                while (rulesToCheck.Count > 0)
                 {
-                    if (rule.Caret < rule.Body.Count)
+                    var currentRule = rulesToCheck.Dequeue();
+                    if (currentRule.Caret < currentRule.Body.Count)
                     {
-                        var symbolRead = rule.Body.ElementAt(rule.Caret);
+                        var symbolRead = currentRule.Body.ElementAt(currentRule.Caret);
                         if (symbolRead.IsNonTerminal())
                         {
                             // Add all productions of symbol, unrepeated
@@ -50,7 +53,10 @@ namespace SchemeInterpreter.SyntacticAnalysis
                             foreach (var occurrance in foundOcurrances)
                             {
                                 if (!state.Value.Contents.Contains(occurrance))
+                                {
+                                    rulesToCheck.Enqueue(occurrance);
                                     state.Value.Contents.Add(occurrance);
+                                }
                             }
                         }
                     }
