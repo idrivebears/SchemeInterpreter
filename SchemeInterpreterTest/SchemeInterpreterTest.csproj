@@ -53,10 +53,7 @@
     <Compile Include="Structures\GrammarTest.cs" />
     <Compile Include="Structures\SymbolTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SyntacticAnalysis\GrammarExample1.cs" />
-    <Compile Include="SyntacticAnalysis\GrammarExample2.cs" />
-    <Compile Include="SyntacticAnalysis\GrammarExample3.cs" />
-    <Compile Include="SyntacticAnalysis\LR1Test.cs" />
+    <Compile Include="SyntacticAnalysis\LR1TableTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SchemeInterpreter\SchemeInterpreter.csproj">

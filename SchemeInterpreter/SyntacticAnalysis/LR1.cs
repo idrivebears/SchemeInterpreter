@@ -156,6 +156,10 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
                 foreach (var transition in lr1AutomataState.KernelTransitions)
                 {
+                    if (transition.Value.Header.IsEOS())
+                        continue;
+                    
+
                     var state = _automata[transition.Value];
                     var stateIndex = AutomataStates.First(x => x.Value == state).Key;
                     lr1AutomataState.PublicTransitions.Add(transition.Key, stateIndex);
