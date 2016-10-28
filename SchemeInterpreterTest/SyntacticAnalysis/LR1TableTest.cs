@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SchemeInterpreter.Structures;
 using SchemeInterpreter.SyntacticAnalysis;
@@ -10,9 +8,8 @@ using SchemeInterpreter.SyntacticAnalysis;
 namespace SchemeInterpreterTest.SyntacticAnalysis
 {
     [TestClass]
-    class LR1TableTest
+    public class LR1TableTest
     {
-
         [TestMethod]
         public void TestTableAcceptor()
         {
