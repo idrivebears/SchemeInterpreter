@@ -13,6 +13,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
         public ProductionRule Header;
         public List<ProductionRule> Contents { get; set; }
         public Dictionary<Symbol, ProductionRule> Transitions { get; set; }
+        public Dictionary<Symbol, int> PublicTransitions { get; set; }
         public int StateName;
         public bool Explored { get; set; }
 
@@ -21,7 +22,6 @@ namespace SchemeInterpreter.SyntacticAnalysis
             StateName = stateName;
             Header = header;
             Explored = false;
-
             Contents = contents;
             if (Contents == null)
                 Contents = new List<ProductionRule>();
