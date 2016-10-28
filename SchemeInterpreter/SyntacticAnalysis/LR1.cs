@@ -78,9 +78,9 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
                         // Generate new state with rule as header only if state doesnt previously exist
                         // Transition already exists, therefore state also exists
-                        if (state.Value.Transitions.ContainsKey(readSymbol))
+                        if (state.Value.KernelTransitions.ContainsKey(readSymbol))
                         {
-                            var nextStateHeader = state.Value.Transitions[readSymbol];
+                            var nextStateHeader = state.Value.KernelTransitions[readSymbol];
                             _automata[nextStateHeader].Contents.Add(newRule);
                         }
                         // Transition doesnt exist
@@ -90,7 +90,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                             if (_automata.ContainsKey(newRule))
                             {
                                 // Add transition to the state
-                                state.Value.Transitions.Add(readSymbol, newRule);
+                                state.Value.KernelTransitions.Add(readSymbol, newRule);
                             }
                             // State doesnt exist
                             else
@@ -100,7 +100,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                                 _automata[newRule].Contents.Add(newRule);
 
                                 // add transition
-                                state.Value.Transitions.Add(readSymbol, newRule);
+                                state.Value.KernelTransitions.Add(readSymbol, newRule);
                             }
                         }
                     }
@@ -127,7 +127,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             {
                 lr1AutomataState.PublicTransitions = new Dictionary<Symbol, int>();
 
-                foreach (var transition in lr1AutomataState.Transitions)
+                foreach (var transition in lr1AutomataState.KernelTransitions)
                 {
                     var state = _automata[transition.Value];
                     var stateIndex = AutomataStates.First(x => x.Value == state).Key;

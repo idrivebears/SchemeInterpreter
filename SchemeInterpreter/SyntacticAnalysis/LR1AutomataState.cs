@@ -12,12 +12,12 @@ namespace SchemeInterpreter.SyntacticAnalysis
     {
         public ProductionRule Header;
         public List<ProductionRule> Contents { get; set; }
-        public Dictionary<Symbol, ProductionRule> Transitions { get; set; }
+        public Dictionary<Symbol, ProductionRule> KernelTransitions { get; set; }
         public Dictionary<Symbol, int> PublicTransitions { get; set; }
         public int StateName;
         public bool Explored { get; set; }
 
-        public LR1AutomataState(int stateName, ProductionRule header, List<ProductionRule> contents = null, Dictionary<Symbol, ProductionRule> transitions = null)
+        public LR1AutomataState(int stateName, ProductionRule header, List<ProductionRule> contents = null, Dictionary<Symbol, ProductionRule> kernelTransitions = null)
         {
             StateName = stateName;
             Header = header;
@@ -26,9 +26,9 @@ namespace SchemeInterpreter.SyntacticAnalysis
             if (Contents == null)
                 Contents = new List<ProductionRule>();
 
-            Transitions = transitions;
-            if(Transitions == null)
-                Transitions = new Dictionary<Symbol, ProductionRule>();
+            KernelTransitions = kernelTransitions;
+            if(KernelTransitions == null)
+                KernelTransitions = new Dictionary<Symbol, ProductionRule>();
         }
     }
 }
