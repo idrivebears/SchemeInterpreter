@@ -133,7 +133,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
             var acceptanceState = new LR1AutomataState(_automata.Keys.Count, new ProductionRule(accSym, new List<Symbol>()));
             _automata.Add(acceptanceState.Header, acceptanceState);
-            _automata[firstState.Header].KernelTransitions.Add(new Symbol(Symbol.SymTypes.NoTerminal, "S"), acceptanceState.Header);
+            _automata[firstState.Header].KernelTransitions.Add(firstState.Header.Header, acceptanceState.Header);
 
         }
 
