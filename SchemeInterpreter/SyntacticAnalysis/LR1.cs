@@ -42,7 +42,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 {
                     if (rule.Caret < rule.Body.Count)
                     {
-                        var symbolRead = rule.Body.ElementAt(rule.Caret + 1);
+                        var symbolRead = rule.Body.ElementAt(rule.Caret);
                         if (symbolRead.IsNonTerminal())
                         {
                             // Add all productions of symbol, unrepeated
