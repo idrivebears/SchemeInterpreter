@@ -33,6 +33,11 @@ namespace SchemeInterpreter.Structures
             return (otherRule.Header == Header && otherRule.Body == Body && otherRule.Caret == Caret);
         }
 
+        public override int GetHashCode()
+        {
+            return ToString().GetHashCode();
+        }
+
         public override string ToString()
         {
             var bodyString = "\n";

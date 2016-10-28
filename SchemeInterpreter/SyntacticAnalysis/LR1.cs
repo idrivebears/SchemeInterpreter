@@ -42,7 +42,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 // be done somehow else
                 var rulesToCheck = new Queue<ProductionRule>(state.Value.Contents.ToList());
 
-                while (rulesToCheck.Count > 0)
+                while (rulesToCheck.Count > 0) 
                 {
                     var currentRule = rulesToCheck.Dequeue();
                     if (currentRule.Caret < currentRule.Body.Count)
