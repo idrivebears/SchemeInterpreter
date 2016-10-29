@@ -16,7 +16,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
         private readonly Dictionary<Symbol, int> _terminalLookup;
         private readonly Dictionary<Tuple<Symbol, int>, int> _gotoLookup;
         private readonly LR1 _lr1;
-        private int acceptanceState = -1;
+        private readonly int _acceptanceState;
 
         internal class Action
         {
@@ -32,10 +32,10 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
         private class ExtendedSymbol : Symbol
         {
-            public string TokenClass { get; private set; }
+            private string _tokenClass;
             public ExtendedSymbol(SymTypes type, string val, string tokenClass) : base(type, val)
             {
-                TokenClass = tokenClass;
+                _tokenClass = tokenClass;
             }
         }
 
@@ -54,8 +54,8 @@ namespace SchemeInterpreter.SyntacticAnalysis
             var terminals = (_grammar.Symbols.Where(x => x.IsTerminal())).ToArray();
             var nonTerminals = (_grammar.Symbols.Where(x => x.IsNonTerminal())).ToArray();
 
-            acceptanceState = _lr1.AutomataStates.Keys.Count-1;
-            var maxState = acceptanceState;
+            _acceptanceState = _lr1.AutomataStates.Keys.Count-1;
+            var maxState = _acceptanceState;
 
             for(var i=0; i<terminals.Length;i++)
                 _terminalLookup.Add(terminals[i], i);
@@ -105,14 +105,16 @@ namespace SchemeInterpreter.SyntacticAnalysis
             var lexer = LexerGenerator.Generate("LR.miniflex"); //Rembebr to change lexer
             var tokens = lexer.Tokenize(input);
             foreach (var token in tokens)
-                if (token.Type != "(end)")
-                    inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.Terminal, token.Value, token.Type));
+                if (token.Type != "(end)" && token.Type != "(white-space)")
+                    inputQueue.Enqueue(token.Type == "(id)"
+                        ? new ExtendedSymbol(Symbol.SymTypes.Terminal, "id", token.Value)
+                        : new ExtendedSymbol(Symbol.SymTypes.Terminal, token.Value, token.Type));
 
             inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.EOS, "$", "EoS"));
             //Initialize stacks
             stateStack.Push(0); //state 0 is init state
 
-            while (stateStack.Peek() != acceptanceState)
+            while (stateStack.Peek() != _acceptanceState || inputQueue.Count > 1)
             {
                 var focusState = stateStack.Peek();
                 var focusSym = inputQueue.Peek();
@@ -146,6 +148,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                         break;
                 }
             }
+
             return true;
         }
 
