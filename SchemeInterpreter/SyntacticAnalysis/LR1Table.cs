@@ -114,8 +114,9 @@ namespace SchemeInterpreter.SyntacticAnalysis
             //Initialize stacks
             stateStack.Push(0); //state 0 is init state
 
-            while (stateStack.Peek() != _acceptanceState || inputQueue.Count > 1)
+            while (stateStack.Peek() != _acceptanceState)
             {
+
                 var focusState = stateStack.Peek();
                 var focusSym = inputQueue.Peek();
 
@@ -133,6 +134,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                         break;
                     case ActionTypes.Reduce:
                         //Do the Reduce
+                        var debugProduction = _grammar.ProductionRules[focusAction.ActionVal];
                         //Get production body size
                         var productionSize =
                             _grammar.ProductionRules[focusAction.ActionVal].Body.Count(x => !x.IsEpsilon());
