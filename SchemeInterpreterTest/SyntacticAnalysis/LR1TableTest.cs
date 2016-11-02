@@ -15,6 +15,7 @@ namespace SchemeInterpreterTest.SyntacticAnalysis
         {
             var symbols = new Dictionary<string, Symbol>
             {
+                {"S'", new Symbol(Symbol.SymTypes.NoTerminal, "S'")},
                 {"S", new Symbol(Symbol.SymTypes.NoTerminal, "S")},
                 {"F", new Symbol(Symbol.SymTypes.NoTerminal, "F")},
                 {"(", new Symbol(Symbol.SymTypes.Terminal, "(")},
@@ -25,8 +26,12 @@ namespace SchemeInterpreterTest.SyntacticAnalysis
 
             var productionRules = new List<ProductionRule>();
 
-            var productionRuleBody = new List<Symbol> { symbols["S"], symbols["*"], symbols["F"] };
-            var productionRule = new ProductionRule(symbols["S"], productionRuleBody);
+            var productionRuleBody = new List<Symbol> { symbols["S"] };
+            var productionRule = new ProductionRule(symbols["S'"], productionRuleBody);
+            productionRules.Add(productionRule);
+
+            productionRuleBody = new List<Symbol> { symbols["S"], symbols["*"], symbols["F"] };
+            productionRule = new ProductionRule(symbols["S"], productionRuleBody);
             productionRules.Add(productionRule);
 
             productionRuleBody = new List<Symbol> { symbols["F"] };
@@ -46,7 +51,10 @@ namespace SchemeInterpreterTest.SyntacticAnalysis
             //build table
             var analyzer = new LR1Table(g);
 
-            Assert.IsTrue(analyzer.Accept("id*id"));
+            //Assert.IsTrue(analyzer.Accept("id*id"));
+            Assert.IsTrue(analyzer.Accept("(id*id)id"));
+            // Assert.IsTrue(analyzer.Accept("(id*id)*id"));
+            //Assert.IsFalse(analyzer.Accept("(*id))"));
         }
     }
 }

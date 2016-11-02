@@ -13,6 +13,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
         public enum ActionTypes {Shift, Reduce};
 
         private readonly Grammar _grammar;
+        private readonly Action[,] _table;
         private readonly Dictionary<Symbol, int> _terminalLookup;
         private readonly Dictionary<Tuple<Symbol, int>, int> _gotoLookup;
         private readonly LR1 _lr1;
@@ -39,7 +40,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             }
         }
 
-        private readonly Action[,] _table;
+        
 
         public LR1Table(Grammar g)
         {
@@ -114,7 +115,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             //Initialize stacks
             stateStack.Push(0); //state 0 is init state
 
-            while (stateStack.Peek() != _acceptanceState)
+            while ( stateStack.Peek() != _acceptanceState )
             {
 
                 var focusState = stateStack.Peek();
@@ -122,6 +123,10 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
                 var focusAction = _table[_terminalLookup[focusSym], focusState];
 
+                //PrintDebug(stateStack, symbolStack, inputQueue, focusAction);
+
+                if (focusState == 1 && focusSym.IsEOS())
+                    return true;
                 if (focusAction == null)
                     return false; //Action is not defined for the current state and terminal.
 
@@ -150,10 +155,31 @@ namespace SchemeInterpreter.SyntacticAnalysis
                         break;
                 }
             }
-
             return true;
         }
 
+        private static void PrintDebug(IEnumerable<int> stateStack, IEnumerable<Symbol> symStack, IEnumerable<ExtendedSymbol> inputQueue, Action action)
+        {
+            Console.Write("Estados> ");
+            foreach (var state in stateStack)
+                Console.Write("{0} | ", state);
+
+            Console.WriteLine("");
+            Console.Write("Simbolos> ");
+            foreach (var sym in symStack)
+                Console.Write("{0} ", sym.Value);
+
+            Console.WriteLine("");
+            Console.Write("Entrada> ");
+            foreach (var sym in inputQueue)
+                Console.Write("{0} ", sym.Value);
+
+            if(action == null)
+                return;
+            Console.WriteLine("");
+            Console.Write("Accion> ");
+            Console.WriteLine("{0} :: {1}", action.Type, action.ActionVal);
+        }
 
     }
 }
