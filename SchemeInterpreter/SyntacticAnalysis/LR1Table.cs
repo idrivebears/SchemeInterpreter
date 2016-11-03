@@ -123,7 +123,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
                 var focusAction = _table[_terminalLookup[focusSym], focusState];
 
-                //PrintDebug(stateStack, symbolStack, inputQueue, focusAction);
+                PrintDebug(stateStack, symbolStack, inputQueue, focusAction);
 
                 if (focusAction == null)
                     return false; //Action is not defined for the current state and terminal.
@@ -177,6 +177,8 @@ namespace SchemeInterpreter.SyntacticAnalysis
             Console.WriteLine("");
             Console.Write("Accion> ");
             Console.WriteLine("{0} :: {1}", action.Type, action.ActionVal);
+
+            Console.WriteLine("");
         }
 
     }
