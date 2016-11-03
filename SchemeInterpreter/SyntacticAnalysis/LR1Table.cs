@@ -125,8 +125,6 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
                 //PrintDebug(stateStack, symbolStack, inputQueue, focusAction);
 
-                if (focusState == 1 && focusSym.IsEOS())
-                    return true;
                 if (focusAction == null)
                     return false; //Action is not defined for the current state and terminal.
 

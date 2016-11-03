@@ -144,7 +144,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             AutomataStates = new Dictionary<int, LR1AutomataState>();
             int uniqueID = 0;
 
-            for (var i = 0; i < _automata.Values.Count - 1; i++)
+            for (var i = 0; i < _automata.Values.Count; i++)
             {
                 var lr1AutomataState = _automata.Values.ToArray()[i];
                 lr1AutomataState.StateName = uniqueID;
@@ -160,7 +160,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 {
 
                     var state = _automata[transition.Value];
-                    var stateIndex = AutomataStates.First(x => x.Value == state).Key;
+                    var stateIndex = AutomataStates.First(x => x.Value.Header == state.Header).Key;
                     lr1AutomataState.PublicTransitions.Add(transition.Key, stateIndex);
                 }
 
