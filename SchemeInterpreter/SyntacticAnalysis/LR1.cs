@@ -128,12 +128,14 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 state.Value.Explored = true;
             }
 
+
             // Add acceptance state
             var accSym = new Symbol(Symbol.SymTypes.EOS, "$");
-
+            var intermState = _automata.ElementAt(1);
             var acceptanceState = new LR1AutomataState(_automata.Keys.Count, new ProductionRule(accSym, new List<Symbol>()));
+            intermState.Value.KernelTransitions.Add(accSym, acceptanceState.Header);
             _automata.Add(acceptanceState.Header, acceptanceState);
-            _automata[firstState.Header].KernelTransitions.Add(firstState.Header.Header, acceptanceState.Header);
+            //_automata[firstState.Header].KernelTransitions.Add(firstState.Header.Header, acceptanceState.Header);
 
         }
 
