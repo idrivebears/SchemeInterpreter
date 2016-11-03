@@ -61,6 +61,13 @@
       <Name>SchemeInterpreter</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="LR.miniflex" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\SchemeInterpreterTest.dll" />
+    <Content Include="bin\Debug\SchemeInterpreterTest.pdb" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
