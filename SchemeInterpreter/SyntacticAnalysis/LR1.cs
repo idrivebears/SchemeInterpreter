@@ -123,10 +123,11 @@ namespace SchemeInterpreter.SyntacticAnalysis
                     }
                 }
 
-                if (state.Value.Contents.Count == 1 && state.Value.KernelTransitions.Count == 0)
+                /*if (state.Value.Contents.Count == 1 && state.Value.KernelTransitions.Count == 0)
                 {
                     state.Value.RuleToReduce = state.Value.Contents[0];
-                }
+                }*/
+
 
                 state.Value.Explored = true;
             }
@@ -139,6 +140,17 @@ namespace SchemeInterpreter.SyntacticAnalysis
             intermState.Value.KernelTransitions.Add(accSym, acceptanceState.Header);
             _automata.Add(acceptanceState.Header, acceptanceState);
             //_automata[firstState.Header].KernelTransitions.Add(firstState.Header.Header, acceptanceState.Header);
+
+            //Add the rule to reduce for each state
+            foreach (var s in _automata)
+            {
+                var state = s.Value;
+                if (state.Contents.Any(x => x.Caret == x.Body.Count-1))
+                {
+                    var r = state.Contents.First(x => x.Caret == x.Body.Count - 1);
+                    state.RuleToReduce = r;
+                }
+            }
 
         }
 
