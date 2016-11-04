@@ -64,7 +64,7 @@ namespace SchemeInterpreter
             //build table
             var analyzer = new LR1Table(g);
 
-            var result = analyzer.Accept("id*id+id");
+            var result = analyzer.Accept("(id*(id+id))*id");
             Console.ReadLine();
         }
     }

@@ -145,9 +145,9 @@ namespace SchemeInterpreter.SyntacticAnalysis
             foreach (var s in _automata)
             {
                 var state = s.Value;
-                if (state.Contents.Any(x => x.Caret == x.Body.Count-1))
+                if (state.Contents.Any(x => x.Caret == x.Body.Count))
                 {
-                    var r = state.Contents.First(x => x.Caret == x.Body.Count - 1);
+                    var r = state.Contents.First(x => x.Caret == x.Body.Count);
                     state.RuleToReduce = r;
                 }
             }
