@@ -72,7 +72,7 @@ namespace SchemeInterpreterTest.SyntacticAnalysis
             //build table
             var analyzer = new LR1Table(g);
 
-            Assert.IsTrue(analyzer.Accept("(id+(id*(id+a)))*(id+(id*(id)))"));
+            Assert.IsTrue(analyzer.Accept("id*id+id"));
         }
     }
 }
