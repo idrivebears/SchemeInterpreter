@@ -15,48 +15,37 @@ namespace SchemeInterpreterTest.SyntacticAnalysis
         {
             var symbols = new Dictionary<string, Symbol>
             {
-                {"S", new Symbol(Symbol.SymTypes.NoTerminal, "S")},
-                {"E", new Symbol(Symbol.SymTypes.NoTerminal, "E")},
                 {"E'", new Symbol(Symbol.SymTypes.NoTerminal, "E'")},
+                {"E", new Symbol(Symbol.SymTypes.NoTerminal, "E")},
                 {"T", new Symbol(Symbol.SymTypes.NoTerminal, "T")},
-                {"T'", new Symbol(Symbol.SymTypes.NoTerminal, "T'")},
                 {"F", new Symbol(Symbol.SymTypes.NoTerminal, "F")},
                 {"id", new Symbol(Symbol.SymTypes.Terminal, "id")},
                 {"+", new Symbol(Symbol.SymTypes.Terminal, "+")},
                 {"*", new Symbol(Symbol.SymTypes.Terminal, "*")},
                 {"(", new Symbol(Symbol.SymTypes.Terminal, "(")},
-                {")", new Symbol(Symbol.SymTypes.Terminal, ")")},
-                {"EPSILON", new Symbol(Symbol.SymTypes.Epsilon, "EPSILON")}
+                {")", new Symbol(Symbol.SymTypes.Terminal, ")")}
             };
 
             var productionRules = new List<ProductionRule>();
 
             var productionRuleBody = new List<Symbol> { symbols["E"] };
-            var productionRule = new ProductionRule(symbols["S"], productionRuleBody);
+            var productionRule = new ProductionRule(symbols["E'"], productionRuleBody);
             productionRules.Add(productionRule);
 
-            productionRuleBody = new List<Symbol> { symbols["T"], symbols["E'"] };
+            productionRuleBody = new List<Symbol> { symbols["E"], symbols["+"], symbols["T"] };
             productionRule = new ProductionRule(symbols["E"], productionRuleBody);
             productionRules.Add(productionRule);
 
-            productionRuleBody = new List<Symbol> { symbols["+"], symbols["T"], symbols["E'"] };
-            productionRule = new ProductionRule(symbols["E'"], productionRuleBody);
+            productionRuleBody = new List<Symbol> { symbols["T"] };
+            productionRule = new ProductionRule(symbols["E"], productionRuleBody);
             productionRules.Add(productionRule);
 
-            productionRuleBody = new List<Symbol> { symbols["EPSILON"] };
-            productionRule = new ProductionRule(symbols["E'"], productionRuleBody);
-            productionRules.Add(productionRule);
-
-            productionRuleBody = new List<Symbol> { symbols["F"], symbols["T'"] };
+            productionRuleBody = new List<Symbol> { symbols["T"], symbols["*"], symbols["F"] };
             productionRule = new ProductionRule(symbols["T"], productionRuleBody);
             productionRules.Add(productionRule);
 
-            productionRuleBody = new List<Symbol> { symbols["*"], symbols["F"], symbols["T'"] };
-            productionRule = new ProductionRule(symbols["T'"], productionRuleBody);
-            productionRules.Add(productionRule);
-
-            productionRuleBody = new List<Symbol> { symbols["EPSILON"] };
-            productionRule = new ProductionRule(symbols["T'"], productionRuleBody);
+            productionRuleBody = new List<Symbol> { symbols["F"] };
+            productionRule = new ProductionRule(symbols["T"], productionRuleBody);
             productionRules.Add(productionRule);
 
             productionRuleBody = new List<Symbol> { symbols["("], symbols["E"], symbols[")"] };
@@ -72,7 +61,7 @@ namespace SchemeInterpreterTest.SyntacticAnalysis
             //build table
             var analyzer = new LR1Table(g);
 
-            Assert.IsTrue(analyzer.Accept("id*id+id"));
+            Assert.IsTrue(analyzer.Accept("id*id*id"));
         }
     }
 }

@@ -95,7 +95,10 @@ namespace SchemeInterpreter.SyntacticAnalysis
                         if (state.Value.KernelTransitions.ContainsKey(readSymbol))
                         {
                             var nextStateHeader = state.Value.KernelTransitions[readSymbol];
-                            _automata[nextStateHeader].Contents.Add(newRule);
+                            if (!_automata[nextStateHeader].Contents.Contains(newRule))
+                            {
+                                _automata[nextStateHeader].Contents.Add(newRule);
+                            }
                         }
                         // Transition doesnt exist
                         else
