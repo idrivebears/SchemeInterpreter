@@ -10,14 +10,16 @@ namespace SchemeInterpreter.SyntacticAnalysis
 {
     public class LR1Table
     {
-        public enum ActionTypes {Shift, Reduce};
+        public enum ActionTypes { Shift, Reduce };
 
         private readonly Grammar _grammar;
         private readonly Action[,] _table;
         private readonly Dictionary<Symbol, int> _terminalLookup;
         private readonly Dictionary<Tuple<Symbol, int>, int> _gotoLookup;
+        private List<Tuple<int, Symbol>> _errorList;
         private readonly LR1 _lr1;
         private readonly int _acceptanceState;
+        private int inputLength;
 
         internal class Action
         {
@@ -40,7 +42,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             }
         }
 
-        
+
 
         public LR1Table(Grammar g)
         {
@@ -55,15 +57,15 @@ namespace SchemeInterpreter.SyntacticAnalysis
             var terminals = (_grammar.Symbols.Where(x => x.IsTerminal())).ToArray();
             var nonTerminals = (_grammar.Symbols.Where(x => x.IsNonTerminal())).ToArray();
 
-            _acceptanceState = _lr1.AutomataStates.Keys.Count-1;
+            _acceptanceState = _lr1.AutomataStates.Keys.Count - 1;
             var maxState = _acceptanceState;
 
-            for(var i=0; i<terminals.Length;i++)
+            for (var i = 0; i < terminals.Length; i++)
                 _terminalLookup.Add(terminals[i], i);
             _terminalLookup.Add(new Symbol(Symbol.SymTypes.EOS, "$"), terminals.Length); //add the end of string symbol
 
 
-            _table = new Action[_terminalLookup.Count, maxState+1]; //generate Action lookUp table
+            _table = new Action[_terminalLookup.Count, maxState + 1]; //generate Action lookUp table
 
             //Construct the table with the provided automaton
             for (var i = 0; i < maxState; i++)
@@ -87,7 +89,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 //set shift Actions
 
                 foreach (var term in _terminalLookup.Keys.Where(term => focusState.PublicTransitions.ContainsKey(term)))
-                    _table[_terminalLookup[term], focusState.StateName] = new Action(ActionTypes.Shift, focusState.PublicTransitions[term]); 
+                    _table[_terminalLookup[term], focusState.StateName] = new Action(ActionTypes.Shift, focusState.PublicTransitions[term]);
 
                 //set goto lookup
                 foreach (var nonTerm in nonTerminals.Where(nonTerm => focusState.PublicTransitions.ContainsKey(nonTerm)))
@@ -101,7 +103,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             var stateStack = new Stack<int>();
             var symbolStack = new Stack<Symbol>();
             var inputQueue = new Queue<ExtendedSymbol>();
-
+            _errorList = new List<Tuple<int, Symbol>>();
             //build input queue
             var lexer = LexerGenerator.Generate("LR.miniflex"); //Rembebr to change lexer
             var tokens = lexer.Tokenize(input);
@@ -112,10 +114,11 @@ namespace SchemeInterpreter.SyntacticAnalysis
                         : new ExtendedSymbol(Symbol.SymTypes.Terminal, token.Value, token.Type));
 
             inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.EOS, "$", "EoS"));
+            inputLength = inputQueue.Count;
             //Initialize stacks
             stateStack.Push(0); //state 0 is init state
 
-            while ( stateStack.Peek() != _acceptanceState )
+            while (stateStack.Peek() != _acceptanceState)
             {
 
                 var focusState = stateStack.Peek();
@@ -126,8 +129,28 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 PrintDebug(stateStack, symbolStack, inputQueue, focusAction);
 
                 if (focusAction == null)
-                    return false; //Action is not defined for the current state and terminal.
-
+                {
+                    var gotoFound = false;
+                    foreach (var i in _grammar.Symbols)
+                    {
+                        if (_gotoLookup.Any(x => x.Key == new Tuple<Symbol, int>(i, focusState)))
+                        {
+                            //Goto exists
+                            var gotoElement = _gotoLookup.First(x => x.Key == new Tuple<Symbol, int>(i, focusState));
+                            stateStack.Push(gotoElement.Value);
+                            _errorList.Add(new Tuple<int, Symbol>(inputQueue.Count, i));
+                            gotoFound = true;
+                            break;
+                        }
+                    }
+                    if (!gotoFound)
+                    {
+                        stateStack.Pop();
+                        if (stateStack.Count == 0) return false;
+                    }
+                    continue;
+                    //return false; //Action is not defined for the current state and terminal.
+                }
                 switch (focusAction.Type)
                 {
                     case ActionTypes.Shift:
@@ -153,6 +176,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                         break;
                 }
             }
+            PrintErrors();
             return true;
         }
 
@@ -172,13 +196,21 @@ namespace SchemeInterpreter.SyntacticAnalysis
             foreach (var sym in inputQueue)
                 Console.Write("{0} ", sym.Value);
 
-            if(action == null)
+            if (action == null)
                 return;
             Console.WriteLine("");
             Console.Write("Accion> ");
             Console.WriteLine("{0} :: {1}", action.Type, action.ActionVal);
 
             Console.WriteLine("");
+        }
+        private void PrintErrors()
+        {
+            if (_errorList.Count == 0) Console.WriteLine("No sintax error found.");
+            foreach (var i in _errorList)
+            {
+                Console.WriteLine("Sintax error on: " + (inputLength - i.Item1) + ", expecting: " + i.Item2.ToString());
+            }
         }
 
     }
