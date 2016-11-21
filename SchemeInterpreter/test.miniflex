@@ -1,3 +1,0 @@
-(Operator) : "\*|\/|\+|\-"
-(literal) : "\d+"
-(white-space) : "\s+"

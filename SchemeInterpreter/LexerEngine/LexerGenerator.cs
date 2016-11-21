@@ -36,7 +36,7 @@ namespace SchemeInterpreter.LexerEngine
                 foreach (var line in lexContent)
                 {
                     var newMember = GetMember(line);
-                    Console.WriteLine("Added Token: {0} Rule {1}", newMember.Item1,@newMember.Item2);
+                    //Console.WriteLine("Added Token: {0} Rule {1}", newMember.Item1,@newMember.Item2);
 
                     lexer.AddDefinition(new TokenDefinition(newMember.Item1, new Regex(@newMember.Item2)));
                 }
