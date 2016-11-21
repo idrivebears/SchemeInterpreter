@@ -132,12 +132,14 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 {
                     var gotoFound = false;
                     foreach (var i in _grammar.Symbols)
-                    {
-                        if (_gotoLookup.Any(x => x.Key == new Tuple<Symbol, int>(i, focusState)))
+                    { 
+                        var y = _gotoLookup.Any(x => x.Key.Item1 == i && x.Key.Item2 == focusState);
+                        if (_gotoLookup.Any(x => x.Key.Item1 == i && x.Key.Item2 == focusState))
                         {
                             //Goto exists
-                            var gotoElement = _gotoLookup.First(x => x.Key == new Tuple<Symbol, int>(i, focusState));
+                            var gotoElement = _gotoLookup.First(x => x.Key.Item1 == i && x.Key.Item2 == focusState);
                             stateStack.Push(gotoElement.Value);
+                            symbolStack.Push(i);
                             _errorList.Add(new Tuple<int, Symbol>(inputQueue.Count, i));
                             gotoFound = true;
                             break;
