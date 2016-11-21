@@ -126,7 +126,11 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 PrintDebug(stateStack, symbolStack, inputQueue, focusAction);
 
                 if (focusAction == null)
+                {
+                    var expected = _terminalLookup.Keys.Where(term => _table[_terminalLookup[term], focusState] != null).Aggregate("", (current, term) => current + (" " + term.Value));
+                    Console.WriteLine("\nExpecting: {0} || Found: {1}", expected, focusSym.Value);
                     return false; //Action is not defined for the current state and terminal.
+                }
 
                 switch (focusAction.Type)
                 {
