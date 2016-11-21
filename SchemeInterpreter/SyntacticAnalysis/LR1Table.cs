@@ -129,6 +129,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 PrintDebug(stateStack, symbolStack, inputQueue, focusAction);
 
                 if (focusAction == null)
+                    //recuperacion de errores
                 {
                     var gotoFound = false;
                     foreach (var i in _grammar.Symbols)
