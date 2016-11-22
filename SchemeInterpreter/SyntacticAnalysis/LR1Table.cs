@@ -108,7 +108,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             var lexer = LexerGenerator.Generate("Scheme.miniflex"); //Rembebr to change lexer
             var tokens = lexer.Tokenize(input);
             foreach (var token in tokens)
-                if (token.Type != "(end)" && token.Type != "(white-space)")
+                if (token.Type != "(end)" && token.Type != "(White-space)")
                     inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.Terminal, token.Type, token.Value));
 
             inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.EOS, "$", "EoS"));
@@ -127,10 +127,9 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 PrintDebug(stateStack, symbolStack, inputQueue, focusAction);
 
                 if (focusAction == null)
-                    //recuperacion de errores
                 {
                     var gotoFound = false;
-                    foreach (var i in _grammar.Symbols)
+                    /*foreach (var i in _grammar.Symbols)
                     { 
                         var y = _gotoLookup.Any(x => x.Key.Item1 == i && x.Key.Item2 == focusState);
                         if (_gotoLookup.Any(x => x.Key.Item1 == i && x.Key.Item2 == focusState))
@@ -148,9 +147,9 @@ namespace SchemeInterpreter.SyntacticAnalysis
                     {
                         stateStack.Pop();
                         if (stateStack.Count == 0) return false;
-                    }
-                    continue;
-                    //return false; //Action is not defined for the current state and terminal.
+                    }*/
+                    //continue;
+                    return false; //Action is not defined for the current state and terminal.
                 }
                 switch (focusAction.Type)
                 {

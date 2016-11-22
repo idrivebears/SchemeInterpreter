@@ -73,6 +73,7 @@ namespace SchemeInterpreter.TacoScheme
 
                     {"Epsilon", new Symbol(Symbol.SymTypes.Epsilon, "Epsilon")}
                 };
+
             productionRules = new List<ProductionRule>();
             var productionRuleBody = new List<Symbol> { Symbols["Program"] };
             var productionRule = new ProductionRule(Symbols["Start"], productionRuleBody);
@@ -84,7 +85,7 @@ namespace SchemeInterpreter.TacoScheme
             productionRules.Add(productionRule);
 
 
-            productionRuleBody = new List<Symbol> { Symbols["Form_list"], Symbols["Form"] };
+            productionRuleBody = new List<Symbol> { Symbols["Form"], Symbols["Form_list"] };
             productionRule = new ProductionRule(Symbols["Form_list"], productionRuleBody);
             productionRules.Add(productionRule);
 
@@ -100,7 +101,6 @@ namespace SchemeInterpreter.TacoScheme
             productionRuleBody = new List<Symbol> { Symbols["Expression"] };
             productionRule = new ProductionRule(Symbols["Form"], productionRuleBody);
             productionRules.Add(productionRule);
-
 
             productionRuleBody = new List<Symbol> { Symbols["Definition_list"], Symbols["Definition"] };
             productionRule = new ProductionRule(Symbols["Definition_list"], productionRuleBody);
@@ -124,7 +124,7 @@ namespace SchemeInterpreter.TacoScheme
             productionRule = new ProductionRule(Symbols["Variable_definition"], productionRuleBody);
             productionRules.Add(productionRule);
 
-            productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(Define)"], Symbols["Variable"], Symbols["Variable_list"], Symbols["(ParentClose)"], Symbols["Body"] };
+            productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(Define)"], Symbols["(ParentOpen)"], Symbols["Variable"], Symbols["Variable_list"], Symbols["(ParentClose)"], Symbols["Body"], Symbols["(ParentClose)"] };
             productionRule = new ProductionRule(Symbols["Variable_definition"], productionRuleBody);
             productionRules.Add(productionRule);
 
@@ -153,6 +153,10 @@ namespace SchemeInterpreter.TacoScheme
             productionRules.Add(productionRule);
 
             productionRuleBody = new List<Symbol> { Symbols["Expression"], Symbols["Expression_list"] };
+            productionRule = new ProductionRule(Symbols["Expression_list"], productionRuleBody);
+            productionRules.Add(productionRule);
+
+            productionRuleBody = new List<Symbol> { Symbols["Epsilon"] };
             productionRule = new ProductionRule(Symbols["Expression_list"], productionRuleBody);
             productionRules.Add(productionRule);
 
