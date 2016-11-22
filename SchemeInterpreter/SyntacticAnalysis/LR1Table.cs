@@ -109,7 +109,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             var tokens = lexer.Tokenize(input);
             foreach (var token in tokens)
                 if (token.Type != "(end)" && token.Type != "(white-space)")
-                    inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.Terminal, token.Value, token.Type));
+                    inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.Terminal, token.Type, token.Value));
 
             inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.EOS, "$", "EoS"));
             inputLength = inputQueue.Count;

@@ -33,7 +33,6 @@ namespace SchemeInterpreter.TacoScheme
                     {"Application", new Symbol(Symbol.SymTypes.NoTerminal, "Application")},
                     {"Datum", new Symbol(Symbol.SymTypes.NoTerminal, "Datum")},
                     {"Datum_list", new Symbol(Symbol.SymTypes.NoTerminal, "Datum_list")},
-                    {"Symbol", new Symbol(Symbol.SymTypes.NoTerminal, "Symbol")},
                     {"List", new Symbol(Symbol.SymTypes.NoTerminal, "List")},
 
 
@@ -89,7 +88,7 @@ namespace SchemeInterpreter.TacoScheme
             productionRule = new ProductionRule(Symbols["Form_list"], productionRuleBody);
             productionRules.Add(productionRule);
 
-            productionRuleBody = new List<Symbol> { Symbols["Epsilon"]};
+            productionRuleBody = new List<Symbol> { Symbols["Form"]};
             productionRule = new ProductionRule(Symbols["Form_list"], productionRuleBody);
             productionRules.Add(productionRule);
 
@@ -209,7 +208,19 @@ namespace SchemeInterpreter.TacoScheme
             productionRule = new ProductionRule(Symbols["Application"], productionRuleBody);
             productionRules.Add(productionRule);
 
-            productionRuleBody = new List<Symbol> { Symbols["(Boolean)"], Symbols["(Number)"], Symbols["(String)"], Symbols["List"]};
+            productionRuleBody = new List<Symbol> { Symbols["(Boolean)"] };
+            productionRule = new ProductionRule(Symbols["Datum"], productionRuleBody);
+            productionRules.Add(productionRule);
+
+            productionRuleBody = new List<Symbol> { Symbols["(Number)"] };
+            productionRule = new ProductionRule(Symbols["Datum"], productionRuleBody);
+            productionRules.Add(productionRule);
+
+            productionRuleBody = new List<Symbol> { Symbols["(String)"] };
+            productionRule = new ProductionRule(Symbols["Datum"], productionRuleBody);
+            productionRules.Add(productionRule);
+
+            productionRuleBody = new List<Symbol> { Symbols["List"] };
             productionRule = new ProductionRule(Symbols["Datum"], productionRuleBody);
             productionRules.Add(productionRule);
 

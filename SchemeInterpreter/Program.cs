@@ -17,7 +17,8 @@ namespace SchemeInterpreter
         static void Main(string[] args)
         {
             var scheme = new TacoSchemeGrammar();
-            var schemeGrammar = new Grammar(scheme.productionRules, new List<Symbol>(scheme.Symbols.Values));
+            var schemeSymbols = new List<Symbol>(scheme.Symbols.Values);
+            var schemeGrammar = new Grammar(scheme.productionRules, schemeSymbols);
             var parser = new LR1Table(schemeGrammar);
             var source = File.ReadAllText("source.ss");
 
