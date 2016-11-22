@@ -105,13 +105,11 @@ namespace SchemeInterpreter.SyntacticAnalysis
             var inputQueue = new Queue<ExtendedSymbol>();
             _errorList = new List<Tuple<int, Symbol>>();
             //build input queue
-            var lexer = LexerGenerator.Generate("LR.miniflex"); //Rembebr to change lexer
+            var lexer = LexerGenerator.Generate("Scheme.miniflex"); //Rembebr to change lexer
             var tokens = lexer.Tokenize(input);
             foreach (var token in tokens)
                 if (token.Type != "(end)" && token.Type != "(white-space)")
-                    inputQueue.Enqueue(token.Type == "(id)"
-                        ? new ExtendedSymbol(Symbol.SymTypes.Terminal, "id", token.Value)
-                        : new ExtendedSymbol(Symbol.SymTypes.Terminal, token.Value, token.Type));
+                    inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.Terminal, token.Value, token.Type));
 
             inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.EOS, "$", "EoS"));
             inputLength = inputQueue.Count;

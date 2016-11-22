@@ -30,7 +30,6 @@ namespace SchemeInterpreter.TacoScheme
                     {"Expression", new Symbol(Symbol.SymTypes.NoTerminal, "Expression")},
                     {"Constant", new Symbol(Symbol.SymTypes.NoTerminal, "Constant")},
                     {"Formals", new Symbol(Symbol.SymTypes.NoTerminal, "Formals")},
-                    //{"Variable_list_positive", new Symbol(Symbol.SymTypes.NoTerminal, "Variable_list_positive")},
                     {"Application", new Symbol(Symbol.SymTypes.NoTerminal, "Application")},
                     {"Datum", new Symbol(Symbol.SymTypes.NoTerminal, "Datum")},
                     {"Datum_list", new Symbol(Symbol.SymTypes.NoTerminal, "Datum_list")},
@@ -44,8 +43,8 @@ namespace SchemeInterpreter.TacoScheme
                     {"(Define)", new Symbol(Symbol.SymTypes.Terminal, "(Define)")},
                     {"(Point)", new Symbol(Symbol.SymTypes.Terminal, "(Point)")},
                     {"(Lambda)", new Symbol(Symbol.SymTypes.Terminal, "(Lambda)")},
-                    {"(If)", new Symbol(Symbol.SymTypes.Terminal, "(Point)")},
-                    {"(Boolean)", new Symbol(Symbol.SymTypes.Terminal, "(Lambda)")},
+                    {"(If)", new Symbol(Symbol.SymTypes.Terminal, "(If)")},
+                    {"(Boolean)", new Symbol(Symbol.SymTypes.Terminal, "(Boolean)")},
                     {"(white-space)", new Symbol(Symbol.SymTypes.Terminal, "(white-space)")},
                     {"(OpPlus)", new Symbol(Symbol.SymTypes.Terminal, "(OpPlus)")},
                     {"(OpMinus)", new Symbol(Symbol.SymTypes.Terminal, "(OpMinus)")},
@@ -70,7 +69,7 @@ namespace SchemeInterpreter.TacoScheme
                     {"(ParentClose)", new Symbol(Symbol.SymTypes.Terminal, "(ParentClose)")},
                     {"(Apostrophe)", new Symbol(Symbol.SymTypes.Terminal, "(Apostrophe)")},
                     {"(Quotation)", new Symbol(Symbol.SymTypes.Terminal, "(Quotation)")},
-                    {"(CurlyBracketOpen)", new Symbol(Symbol.SymTypes.Terminal, "(OpLessEq)")},
+                    {"(CurlyBracketOpen)", new Symbol(Symbol.SymTypes.Terminal, "(CurlyBracketOpen)")},
                     {"(CurlyBracketClose)", new Symbol(Symbol.SymTypes.Terminal, "(CurlyBracketClose)")},
 
                     {"Epsilon", new Symbol(Symbol.SymTypes.Epsilon, "Epsilon")}
@@ -122,7 +121,16 @@ namespace SchemeInterpreter.TacoScheme
             productionRules.Add(productionRule);
 
 
-            productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(Define)"], Symbols["Variable_expression"], Symbols["(ParentClose)"] };
+            productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(Define)"], Symbols["Variable"], Symbols["Expression"], Symbols["(ParentClose)"] };
+            productionRule = new ProductionRule(Symbols["Variable_definition"], productionRuleBody);
+            productionRules.Add(productionRule);
+
+            productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(Define)"], Symbols["Variable"], Symbols["Variable_list"], Symbols["(ParentClose)"], Symbols["Body"] };
+            productionRule = new ProductionRule(Symbols["Variable_definition"], productionRuleBody);
+            productionRules.Add(productionRule);
+
+            productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(Define)"], Symbols["(ParentOpen)"], Symbols["Variable"], 
+                Symbols["Variable_list"], Symbols["(Point)"], Symbols["Variable"], Symbols["(ParentClose)"], Symbols["Body"], Symbols["(ParentClose)"] };
             productionRule = new ProductionRule(Symbols["Variable_definition"], productionRuleBody);
             productionRules.Add(productionRule);
 
@@ -157,19 +165,19 @@ namespace SchemeInterpreter.TacoScheme
             productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody);
             productionRules.Add(productionRule);
 
-            productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(quotation)"], Symbols["Datum"], Symbols["(ParentClose)"] };
+            productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(Quotation)"], Symbols["Datum"], Symbols["(ParentClose)"] };
             productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody);
             productionRules.Add(productionRule);
 
-            productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(lambda)"], Symbols["Formals"], Symbols["Body"], Symbols["(ParentClose)"] };
+            productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(Lambda)"], Symbols["Formals"], Symbols["Body"], Symbols["(ParentClose)"] };
             productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody);
             productionRules.Add(productionRule);
 
-            productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(if)"], Symbols["Expression"], Symbols["Expression"], Symbols["Expression"], Symbols["(ParentClose)"] };
+            productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(If)"], Symbols["Expression"], Symbols["Expression"], Symbols["Expression"], Symbols["(ParentClose)"] };
             productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody);
             productionRules.Add(productionRule);
 
-            productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(if)"], Symbols["Expression"], Symbols["Expression"], Symbols["(ParentClose)"] };
+            productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(If)"], Symbols["Expression"], Symbols["Expression"], Symbols["(ParentClose)"] };
             productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody);
             productionRules.Add(productionRule);
 
@@ -203,14 +211,6 @@ namespace SchemeInterpreter.TacoScheme
 
             productionRuleBody = new List<Symbol> { Symbols["(Boolean)"], Symbols["(Number)"], Symbols["(String)"], Symbols["List"]};
             productionRule = new ProductionRule(Symbols["Datum"], productionRuleBody);
-            productionRules.Add(productionRule);
-
-            productionRuleBody = new List<Symbol> { Symbols["Datum"]};
-            productionRule = new ProductionRule(Symbols["Datum_list_positive"], productionRuleBody);
-            productionRules.Add(productionRule);
-
-            productionRuleBody = new List<Symbol> { Symbols["Datum"], Symbols["Datum_list_positive"] };
-            productionRule = new ProductionRule(Symbols["Datum_list_positive"], productionRuleBody);
             productionRules.Add(productionRule);
 
             productionRuleBody = new List<Symbol> { Symbols["Datum"], Symbols["Datum_list"] };

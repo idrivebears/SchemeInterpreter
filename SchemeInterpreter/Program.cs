@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using SchemeInterpreter.LexerEngine;
 using SchemeInterpreter.Structures;
 using SchemeInterpreter.SyntacticAnalysis;
+using SchemeInterpreter.TacoScheme;
 
 namespace SchemeInterpreter
 {
@@ -15,12 +16,13 @@ namespace SchemeInterpreter
     {
         static void Main(string[] args)
         {
-            var lexer = LexerGenerator.Generate("Scheme.miniflex");
-            var input = File.ReadAllText("source.ss");
-            var tokens = lexer.Tokenize(input);
+            var scheme = new TacoSchemeGrammar();
+            var schemeGrammar = new Grammar(scheme.productionRules, new List<Symbol>(scheme.Symbols.Values));
+            var parser = new LR1Table(schemeGrammar);
+            var source = File.ReadAllText("source.ss");
 
-            foreach (var token in tokens)
-                Console.WriteLine(token);
+            var check = parser.Accept(source);
+
             Console.WriteLine("It works!"); //this is a change
         }
     }
