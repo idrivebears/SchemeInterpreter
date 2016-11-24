@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SchemeInterpreter.Engine;
 using SchemeInterpreter.Structures;
 using SchemeInterpreter.SyntacticAnalysis;
 
@@ -76,12 +77,12 @@ namespace SchemeInterpreter.TacoScheme
 
             productionRules = new List<ProductionRule>();
             var productionRuleBody = new List<Symbol> { Symbols["Program"] };
-            var productionRule = new ProductionRule(Symbols["Start"], productionRuleBody);
+            var productionRule = new ProductionRule( Symbols["Start"], productionRuleBody, 0, SemanticLibrary.ActionA0 );
             productionRules.Add(productionRule);
 
 
             productionRuleBody = new List<Symbol> { Symbols["Form_list"] };
-            productionRule = new ProductionRule(Symbols["Program"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Program"], productionRuleBody, 0, SemanticLibrary.ActionA0 );
             productionRules.Add(productionRule);
 
 
@@ -90,7 +91,7 @@ namespace SchemeInterpreter.TacoScheme
             productionRules.Add(productionRule);
 
             productionRuleBody = new List<Symbol> { Symbols["Form"]};
-            productionRule = new ProductionRule(Symbols["Form_list"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Form_list"], productionRuleBody, 0, SemanticLibrary.ActionA0);
             productionRules.Add(productionRule);
 
             productionRuleBody = new List<Symbol> { Symbols["Definition"] };
@@ -99,7 +100,7 @@ namespace SchemeInterpreter.TacoScheme
 
 
             productionRuleBody = new List<Symbol> { Symbols["Expression"] };
-            productionRule = new ProductionRule(Symbols["Form"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Form"], productionRuleBody, 0, SemanticLibrary.ActionA0);
             productionRules.Add(productionRule);
 
             productionRuleBody = new List<Symbol> { Symbols["Definition_list"], Symbols["Definition"] };
@@ -161,7 +162,7 @@ namespace SchemeInterpreter.TacoScheme
             productionRules.Add(productionRule);
 
             productionRuleBody = new List<Symbol> { Symbols["Constant"]};
-            productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody,0, SemanticLibrary.ActionA0 );
             productionRules.Add(productionRule);
 
             productionRuleBody = new List<Symbol> { Symbols["Variable"] };
@@ -189,7 +190,7 @@ namespace SchemeInterpreter.TacoScheme
             productionRules.Add(productionRule);
 
             productionRuleBody = new List<Symbol> { Symbols["(Boolean)"] };
-            productionRule = new ProductionRule(Symbols["Constant"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Constant"], productionRuleBody, 0, SemanticLibrary.ActionA1 );
             productionRules.Add(productionRule);
 
             productionRuleBody = new List<Symbol> { Symbols["(Number)"] };

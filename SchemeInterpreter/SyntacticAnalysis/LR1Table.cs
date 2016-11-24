@@ -19,6 +19,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
         private List<Tuple<int, Symbol>> _errorList;
         private readonly LR1 _lr1;
         private readonly int _acceptanceState;
+        private readonly LexerEngine.Lexer lexer;
         private int inputLength;
 
         internal class Action
@@ -33,19 +34,58 @@ namespace SchemeInterpreter.SyntacticAnalysis
             }
         }
 
-        private class ExtendedSymbol : Symbol
+        public struct State
+        {
+            public readonly int StateId;
+            public object Result;
+            public readonly Symbol Primary;
+
+            public State(int id)
+            {
+                StateId = id;
+                Result = null;
+                Primary = null;
+            }
+
+            public State(int id, object result)
+            {
+                StateId = id;
+                Result = result;
+                Primary = null;
+            }
+
+            public State(int id, Symbol primary)
+            {
+                StateId = id;
+                Result = null;
+                Primary = primary;
+            }
+
+            public override string ToString()
+            {
+                if (Result != null)
+                    return @"<" + StateId + "> " + Result;
+                return StateId.ToString();
+            }
+        }
+
+        public class ExtendedSymbol : Symbol
         {
             private string _tokenClass;
-            public ExtendedSymbol(SymTypes type, string val, string tokenClass) : base(type, val)
+            public string Value;
+            public ExtendedSymbol(SymTypes type, string val, string tokenClass) : base(type, tokenClass)
             {
                 _tokenClass = tokenClass;
+                Value = val;
             }
         }
 
 
 
-        public LR1Table(Grammar g)
+        public LR1Table(Grammar g, string miniflex)
         {
+
+            lexer = LexerGenerator.Generate(miniflex);
             _grammar = g; //consider building a new grammar, not just stealing the pointer (as LL1).
             _grammar.GenerateFirstAndFollow();
             _terminalLookup = new Dictionary<Symbol, int>();
@@ -100,43 +140,43 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
         public bool Accept(string input)
         {
-            var stateStack = new Stack<int>();
+            var stateStack = new Stack<State>();
             var symbolStack = new Stack<Symbol>();
             var inputQueue = new Queue<ExtendedSymbol>();
             _errorList = new List<Tuple<int, Symbol>>();
+
             //build input queue
-            var lexer = LexerGenerator.Generate("Scheme.miniflex"); //Rembebr to change lexer
             var tokens = lexer.Tokenize(input);
             foreach (var token in tokens)
                 if (token.Type != "(end)" && token.Type != "(White-space)")
-                    inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.Terminal, token.Type, token.Value));
+                    inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.Terminal, token.Value, token.Type));
 
-            inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.EOS, "$", "EoS"));
+            inputQueue.Enqueue(new ExtendedSymbol(Symbol.SymTypes.EOS, "EoS", "$"));
             inputLength = inputQueue.Count;
             //Initialize stacks
-            stateStack.Push(0); //state 0 is init state
+            stateStack.Push(new State(0)); //state 0 is init state
 
-            while (stateStack.Peek() != _acceptanceState)
+            while (stateStack.Peek().StateId != _acceptanceState)
             {
 
                 var focusState = stateStack.Peek();
                 var focusSym = inputQueue.Peek();
 
-                var focusAction = _table[_terminalLookup[focusSym], focusState];
+                var focusAction = _table[_terminalLookup[focusSym], focusState.StateId];
 
                 PrintDebug(stateStack, symbolStack, inputQueue, focusAction);
 
                 if (focusAction == null)
                 {
                     var gotoFound = false;
-                    /*foreach (var i in _grammar.Symbols)
+                    foreach (var i in _grammar.Symbols)
                     { 
-                        var y = _gotoLookup.Any(x => x.Key.Item1 == i && x.Key.Item2 == focusState);
-                        if (_gotoLookup.Any(x => x.Key.Item1 == i && x.Key.Item2 == focusState))
+                        var y = _gotoLookup.Any(x => x.Key.Item1 == i && x.Key.Item2 == focusState.StateId);
+                        if (_gotoLookup.Any(x => x.Key.Item1 == i && x.Key.Item2 == focusState.StateId))
                         {
                             //Goto exists
-                            var gotoElement = _gotoLookup.First(x => x.Key.Item1 == i && x.Key.Item2 == focusState);
-                            stateStack.Push(gotoElement.Value);
+                            var gotoElement = _gotoLookup.First(x => x.Key.Item1 == i && x.Key.Item2 == focusState.StateId);
+                            stateStack.Push(new State(gotoElement.Value));
                             symbolStack.Push(i);
                             _errorList.Add(new Tuple<int, Symbol>(inputQueue.Count, i));
                             gotoFound = true;
@@ -147,40 +187,47 @@ namespace SchemeInterpreter.SyntacticAnalysis
                     {
                         stateStack.Pop();
                         if (stateStack.Count == 0) return false;
-                    }*/
-                    //continue;
-                    return false; //Action is not defined for the current state and terminal.
+                    }
+                    continue;
+                    //return false; //Action is not defined for the current state and terminal.
                 }
                 switch (focusAction.Type)
                 {
                     case ActionTypes.Shift:
                         //Do the shift -> 
-                        symbolStack.Push(inputQueue.Dequeue()); //Consume the symbol and push it to the symStack
-                        stateStack.Push(focusAction.ActionVal); //push the next symbol
+                        var topsym = inputQueue.Dequeue();
+                        symbolStack.Push(topsym); //Consume the symbol and push it to the symStack
+                        stateStack.Push(new State(focusAction.ActionVal, topsym)); //Generate the symState (leaf state) with the symbol
                         break;
                     case ActionTypes.Reduce:
                         //Do the Reduce
-                        var debugProduction = _grammar.ProductionRules[focusAction.ActionVal];
+                        var production = _grammar.ProductionRules[focusAction.ActionVal];
                         //Get production body size
                         var productionSize =
                             _grammar.ProductionRules[focusAction.ActionVal].Body.Count(x => !x.IsEpsilon());
 
+                        var stateArgs = new List<State>();
+
                         for (var i = 0; i < productionSize; i++)
                         {
-                            stateStack.Pop(); //pop n elements, where n is the size of the production body
-                            symbolStack.Pop();
+                            stateArgs.Add(stateStack.Pop());  //Catch children states
+                            symbolStack.Pop(); //DONT Catch symbols (handled on states on shift)
                         }
+                        //EXECUTE THE ACTION
+                        var result = production.SemanticAction(stateArgs);
+
                         symbolStack.Push(_grammar.ProductionRules[focusAction.ActionVal].Header); //push production header
                         //Goto next state
-                        stateStack.Push(_gotoLookup[new Tuple<Symbol, int>(symbolStack.Peek(), stateStack.Peek())]);
+                        stateStack.Push(new State(_gotoLookup[new Tuple<Symbol, int>(symbolStack.Peek(), stateStack.Peek().StateId)], result));
                         break;
                 }
             }
             PrintErrors();
+
             return true;
         }
 
-        private static void PrintDebug(IEnumerable<int> stateStack, IEnumerable<Symbol> symStack, IEnumerable<ExtendedSymbol> inputQueue, Action action)
+        private static void PrintDebug(IEnumerable<State> stateStack, IEnumerable<Symbol> symStack, IEnumerable<ExtendedSymbol> inputQueue, Action action)
         {
             Console.Write("Estados> ");
             foreach (var state in stateStack)
@@ -189,12 +236,12 @@ namespace SchemeInterpreter.SyntacticAnalysis
             Console.WriteLine("");
             Console.Write("Simbolos> ");
             foreach (var sym in symStack)
-                Console.Write("{0} ", sym.Value);
+                Console.Write("{0} ", sym.TokenClass);
 
             Console.WriteLine("");
             Console.Write("Entrada> ");
             foreach (var sym in inputQueue)
-                Console.Write("{0} ", sym.Value);
+                Console.Write("{0} ", sym.TokenClass);
 
             if (action == null)
                 return;

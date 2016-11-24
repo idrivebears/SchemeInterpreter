@@ -11,12 +11,12 @@ namespace SchemeInterpreter.Structures
         public enum SymTypes { Terminal, NoTerminal, Epsilon, EOS }
 
         public SymTypes Type { get; set; }
-        public string Value { get; set; }
+        public string TokenClass { get; set; }
 
-        public Symbol(SymTypes type, string value)
+        public Symbol(SymTypes type, string tokenClass)
         {
             Type = type;
-            Value = value;
+            TokenClass = tokenClass;
         }
 
         public bool IsTerminal()
@@ -42,7 +42,7 @@ namespace SchemeInterpreter.Structures
         public override string ToString()
         {
             /*return string.Format("Symbol: Type: {0}, Value: {1}", Type, Value);*/
-            return string.Format("Symbol: {0}", Value);
+            return string.Format("Symbol: {0}", TokenClass);
         }
 
         public override bool Equals(object obj)
@@ -56,14 +56,14 @@ namespace SchemeInterpreter.Structures
                 return true;
             if ((IsEpsilon() && other.IsEpsilon()) || (IsEOS() && other.IsEOS()))
                 return true;
-            var ret = Type == other.Type && Value == other.Value;
+            var ret = Type == other.Type && TokenClass == other.TokenClass;
 
             return ret;
         }
 
         public override int GetHashCode()
         {
-            return Value.GetHashCode();
+            return TokenClass.GetHashCode();
         }
     }
 }
