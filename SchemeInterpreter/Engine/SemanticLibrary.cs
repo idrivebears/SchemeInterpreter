@@ -14,12 +14,12 @@ namespace SchemeInterpreter.Engine
         //Semantic Action library ::
 
         //Action A0 -> Repeater action (retransmits state result_
-        public static object ActionA0(List<LR1Table.State> args)
+        public static object AcRepeater(List<LR1Table.State> args)
         {
             return args[0].Result;
         }
         //Action A1 -> Reduces boolean to const
-        public static object ActionA1(List<LR1Table.State> args)
+        public static object AcReduceBoolean(List<LR1Table.State> args)
         {
             var state = args[0];
             var sym = state.Primary as LR1Table.ExtendedSymbol;
@@ -28,13 +28,15 @@ namespace SchemeInterpreter.Engine
                 return new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Boolean, true);
             return new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Boolean, false);
         }
+
         // IfAction -> Self explanatory
-        public static object IfAction(List<LR1Table.State> args)
+        public static object AcIf(List<LR1Table.State> args)
         {
             Debug.Assert(args.Count == 2, "If action expects two args.");
             var condition = args[0];
             var branch = args[1];
 
+            return null;
         }
     }
 }

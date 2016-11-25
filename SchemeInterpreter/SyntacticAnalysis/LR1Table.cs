@@ -214,6 +214,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                             symbolStack.Pop(); //DONT Catch symbols (handled on states on shift)
                         }
                         //EXECUTE THE ACTION
+                        stateArgs.Reverse(); //proper order
                         var result = production.SemanticAction(stateArgs);
 
                         symbolStack.Push(_grammar.ProductionRules[focusAction.ActionVal].Header); //push production header
