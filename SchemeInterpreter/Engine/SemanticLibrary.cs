@@ -28,6 +28,13 @@ namespace SchemeInterpreter.Engine
                 return new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Boolean, true);
             return new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Boolean, false);
         }
+        // IfAction -> Self explanatory
+        public static object IfAction(List<LR1Table.State> args)
+        {
+            Debug.Assert(args.Count == 2, "If action expects two args.");
+            var condition = args[0];
+            var branch = args[1];
 
+        }
     }
 }
