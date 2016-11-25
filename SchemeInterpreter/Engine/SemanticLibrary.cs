@@ -26,8 +26,8 @@ namespace SchemeInterpreter.Engine
             Debug.Assert(sym != null, "sym != null");
             if(sym.Value == "true")
                 return new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Boolean, true);
-            else
-                return new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Boolean, false);
+            return new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Boolean, false);
         }
+
     }
 }
