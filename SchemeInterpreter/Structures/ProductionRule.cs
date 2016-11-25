@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SchemeInterpreter.Engine;
+using SchemeInterpreter.SyntacticAnalysis;
 
 namespace SchemeInterpreter.Structures
 {
@@ -13,11 +15,13 @@ namespace SchemeInterpreter.Structures
         public Symbol Header { get; set; }
         public List<Symbol> Body { get; set; }
         public int Caret { get; set; }
+        public Func<List<LR1Table.State>, object> SemanticAction;
 
-        public ProductionRule(Symbol header, List<Symbol> body, int Caret = 0)
+        public ProductionRule(Symbol header, List<Symbol> body, int Caret = 0, Func< List<LR1Table.State>, object> semanticAction = null)
         {
             Header = header;
             Body = body;
+            SemanticAction = semanticAction;
         }
 
         public ProductionRule(ProductionRule productionRule)

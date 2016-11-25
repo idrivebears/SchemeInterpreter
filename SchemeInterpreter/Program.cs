@@ -19,12 +19,12 @@ namespace SchemeInterpreter
             var scheme = new TacoSchemeGrammar();
             var schemeSymbols = new List<Symbol>(scheme.Symbols.Values);
             var schemeGrammar = new Grammar(scheme.productionRules, schemeSymbols);
-            var parser = new LR1Table(schemeGrammar);
+            var parser = new LR1Table(schemeGrammar, "Scheme.miniflex");
             var source = File.ReadAllText("source.ss");
 
             var check = parser.Accept(source);
 
-            Console.WriteLine("It works!"); //this is a change
+            Console.Read();
         }
     }
 }
