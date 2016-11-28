@@ -138,7 +138,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             }
         }
 
-        public bool Accept(string input)
+        public State Accept(string input)
         {
             var stateStack = new Stack<State>();
             var symbolStack = new Stack<Symbol>();
@@ -164,7 +164,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
                 var focusAction = _table[_terminalLookup[focusSym], focusState.StateId];
 
-                PrintDebug(stateStack, symbolStack, inputQueue, focusAction);
+                //PrintDebug(stateStack, symbolStack, inputQueue, focusAction);
 
                 if (focusAction == null)
                 {
@@ -186,7 +186,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                     if (!gotoFound)
                     {
                         stateStack.Pop();
-                        if (stateStack.Count == 0) return false;
+                        if (stateStack.Count == 0) return new State(-1, null);
                     }
                     continue;
                     //return false; //Action is not defined for the current state and terminal.
@@ -196,6 +196,12 @@ namespace SchemeInterpreter.SyntacticAnalysis
                     case ActionTypes.Shift:
                         //Do the shift -> 
                         var topsym = inputQueue.Dequeue();
+                        //Consider De-stringigication (remove leading and trailing ")
+                        if (topsym.TokenClass == "(String)")
+                        {
+                            topsym.Value = topsym.Value.Remove(0, 1); //leading "
+                            topsym.Value = topsym.Value.Remove(topsym.Value.Length-1, 1);
+                        }
                         symbolStack.Push(topsym); //Consume the symbol and push it to the symStack
                         stateStack.Push(new State(focusAction.ActionVal, topsym)); //Generate the symState (leaf state) with the symbol
                         break;
@@ -223,9 +229,9 @@ namespace SchemeInterpreter.SyntacticAnalysis
                         break;
                 }
             }
-            PrintErrors();
-
-            return true;
+            //PrintErrors();
+            stateStack.Pop(); //start production
+            return stateStack.Pop(); //pop programm
         }
 
         private static void PrintDebug(IEnumerable<State> stateStack, IEnumerable<Symbol> symStack, IEnumerable<ExtendedSymbol> inputQueue, Action action)
