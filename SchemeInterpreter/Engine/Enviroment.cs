@@ -16,6 +16,12 @@ namespace SchemeInterpreter.Engine
             {"/", Stdlib.Division},
             {"*", Stdlib.Multiplication},
             {"display", Stdlib.Display},
+            {"eq?", Stdlib.Eq},
+            {">=", Stdlib.GreaterOrEqual},
+            {"<=", Stdlib.LessOrEqual},
+            {"=", Stdlib.Equal},
+            {"<", Stdlib.Lesser},
+            {">", Stdlib.Greater},
         };
 
         public static Dictionary<string, Tuple<Stdlib.SchemeTypes, object>> variables =
@@ -26,6 +32,12 @@ namespace SchemeInterpreter.Engine
                 {"/", new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Function, "/")},
                 {"*", new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Function, "*")},
                 {"display", new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Function, "display")},
+                {"eq?", new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Function, "eq?")},
+                {">=", new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Function, ">=")},
+                {"<=", new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Function, "<=")},
+                {"=", new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Function, "=")},
+                {"<", new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Function, "<")},
+                {">", new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Function, ">")},
             };
     }
 }

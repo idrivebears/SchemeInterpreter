@@ -82,7 +82,7 @@ namespace SchemeInterpreter.Engine
             return args[1].Result;
         }
         //Application
-        public static object AcExecuteApplication(List<LR1Table.State> args)
+        public static object AcBuildApplication(List<LR1Table.State> args)
         {
             var function = args[1].Result as Tuple<Stdlib.SchemeTypes, object>;
             var stateArgs = args[2].Result as Tuple<Stdlib.SchemeTypes, object>;
@@ -124,6 +124,47 @@ namespace SchemeInterpreter.Engine
             }
             //build result
             return variable;
+        }
+
+        //Define variable in Enviroment
+        public static object AcDefineVar(List<LR1Table.State> args)
+        {
+            
+            var id = args[2].Result as Tuple<Stdlib.SchemeTypes, object>;
+            var value = args[3].Result as Tuple<Stdlib.SchemeTypes, object>;
+
+            //Simple definition, bind value to id
+            if (value.Item1 != Stdlib.SchemeTypes.Function)
+            {
+                if (Enviroment.variables.Keys.Contains((string)id.Item2))
+                    Enviroment.variables[(string)id.Item2] = new Tuple<Stdlib.SchemeTypes, object>(value.Item1, value.Item2);
+                else
+                    Enviroment.variables.Add((string)id.Item2, new Tuple<Stdlib.SchemeTypes, object>(value.Item1, value.Item2));
+            }
+
+            //Complex definition, bind function to id
+
+            return value; //return assigned value
+        }
+        //Handle if statement
+        public static object AcHandleIf(List<LR1Table.State> args)
+        {
+            var cond = args[2].Result as Tuple<Stdlib.SchemeTypes, object>;
+            var exp1 = args[3].Result as Tuple<Stdlib.SchemeTypes, object>;
+            var exp2 = args[4].Result as Tuple<Stdlib.SchemeTypes, object>;
+
+            if (cond.Item1 != Stdlib.SchemeTypes.Boolean)
+                return exp1;
+            if ((bool)cond.Item2)
+                return exp1;
+            else
+                return exp2;
+        }
+        //Build lambda function [Warning, here there be dragons]
+        public static object AcBuildLambda(List<LR1Table.State> args)
+        {
+            //Build functions
+            return null;
         }
     }
 }

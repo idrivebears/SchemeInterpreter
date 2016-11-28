@@ -95,7 +95,7 @@ namespace SchemeInterpreter.TacoScheme
 
             //Form -> Definition | Expression
             productionRuleBody = new List<Symbol> { Symbols["Definition"] };
-            productionRule = new ProductionRule(Symbols["Form"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Form"], productionRuleBody, 0, SemanticLibrary.AcRepeater);
             productionRules.Add(productionRule);
             productionRuleBody = new List<Symbol> { Symbols["Expression"] };
             productionRule = new ProductionRule(Symbols["Form"], productionRuleBody, 0, SemanticLibrary.AcRepeater);
@@ -103,7 +103,7 @@ namespace SchemeInterpreter.TacoScheme
 
             //Definition -> Variable_definition | (begin Definition_list)
             productionRuleBody = new List<Symbol> { Symbols["Variable_definition"] };
-            productionRule = new ProductionRule(Symbols["Definition"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Definition"], productionRuleBody, 0, SemanticLibrary.AcRepeater);
             productionRules.Add(productionRule);
             productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(Begin)"], Symbols["Definition_list"], Symbols["(ParentClose)"] };
             productionRule = new ProductionRule(Symbols["Definition"], productionRuleBody);
@@ -115,7 +115,7 @@ namespace SchemeInterpreter.TacoScheme
              *                      | (define (Variable Variable_list point Variable) Body)
              */
             productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(Define)"], Symbols["Variable"], Symbols["Expression"], Symbols["(ParentClose)"] };
-            productionRule = new ProductionRule(Symbols["Variable_definition"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Variable_definition"], productionRuleBody, 0, SemanticLibrary.AcDefineVar);
             productionRules.Add(productionRule);
             productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(Define)"], Symbols["(ParentOpen)"], Symbols["Variable"], Symbols["Variable_list"], Symbols["(ParentClose)"], Symbols["Body"], Symbols["(ParentClose)"] };
             productionRule = new ProductionRule(Symbols["Variable_definition"], productionRuleBody);
@@ -182,7 +182,7 @@ namespace SchemeInterpreter.TacoScheme
             productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody);
             productionRules.Add(productionRule);
             productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(If)"], Symbols["Expression"], Symbols["Expression"], Symbols["Expression"], Symbols["(ParentClose)"] };
-            productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody, 0, SemanticLibrary.AcHandleIf);
             productionRules.Add(productionRule);
             productionRuleBody = new List<Symbol> { Symbols["Application"]};
             productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody, 0, SemanticLibrary.AcRepeater);
@@ -213,7 +213,7 @@ namespace SchemeInterpreter.TacoScheme
 
             //Application -> (Expression Expression_list)
             productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["Expression"], Symbols["Expression_list"], Symbols["(ParentClose)"] };
-            productionRule = new ProductionRule(Symbols["Application"], productionRuleBody, 0, SemanticLibrary.AcExecuteApplication);
+            productionRule = new ProductionRule(Symbols["Application"], productionRuleBody, 0, SemanticLibrary.AcBuildApplication);
             productionRules.Add(productionRule);
 
             //Datum -> Constant

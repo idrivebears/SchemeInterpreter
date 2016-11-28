@@ -34,7 +34,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             }
         }
 
-        public struct State
+        public struct State //no longer a struct
         {
             public readonly int StateId;
             public object Result;
@@ -196,7 +196,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                     case ActionTypes.Shift:
                         //Do the shift -> 
                         var topsym = inputQueue.Dequeue();
-                        //Consider De-stringigication (remove leading and trailing ")
+                        //Consider De-stringification (remove leading and trailing ")
                         if (topsym.TokenClass == "(String)")
                         {
                             topsym.Value = topsym.Value.Remove(0, 1); //leading "

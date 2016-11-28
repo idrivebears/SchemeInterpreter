@@ -103,5 +103,123 @@ namespace SchemeInterpreter.Engine
             Console.WriteLine(list[0].Item2); //display item 2 to the STDOUT
             return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, false);
         }
+
+        //Type Equality
+        public static Tuple<SchemeTypes, object> Eq(object args)
+        {
+            var list = args as List<Tuple<SchemeTypes, object>>;
+            if (list.Count != 2)
+                throw new Exception("Wrong number of arguments for operator 'Eq?'. Expected 2, has:" + list.Count);
+
+            return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, list[0].Item1 == list[1].Item1);
+        }
+        //Full Equality
+        public static Tuple<SchemeTypes, object> Equal(object args)
+        {
+            var list = args as List<Tuple<SchemeTypes, object>>;
+            if(list.Count != 2)
+                throw new Exception("Wrong number of arguments for operator '='. Expected 2, has:" + list.Count);
+            
+            if(list[0].Item1 != list[1].Item1)
+                return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, false);
+
+            //compare types
+            switch (list[0].Item1)
+            {
+                case SchemeTypes.Boolean:
+                    return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, (bool)list[0].Item2 == (bool)list[1].Item2);
+                case SchemeTypes.Number:
+                    const double eps = 0.00000001;
+                    return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, (Math.Abs((double)list[0].Item2 - (double)list[1].Item2)) <= eps);
+                case SchemeTypes.String:
+                    return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, (string)list[0].Item2 == (string)list[1].Item2);
+                case SchemeTypes.Function:
+                    return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, (string)list[0].Item2 == (string)list[1].Item2);
+                case SchemeTypes.List:
+                    var listA = list[0].Item2 as List<Tuple<SchemeTypes, object>>;
+                    var listB = list[0].Item2 as List<Tuple<SchemeTypes, object>>;
+
+                    if(listA.Count != listB.Count)
+                        return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, false); //different length
+                    for (var i = 0; i < listA.Count; i++)
+                    {
+                        var eqTest = Equal(new List<Tuple<SchemeTypes, object>>() {listA[i], listB[i]});
+                        if(!(bool)eqTest.Item2)
+                            return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, false); //different objects 
+
+                    }
+                    return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, true);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        //Greater or equal
+        public static Tuple<SchemeTypes, object> GreaterOrEqual(object args)
+        {
+            var list = args as List<Tuple<SchemeTypes, object>>;
+            if (list.Count != 2)
+                throw new Exception("Wrong number of arguments for operator '>='. Expected 2, has:" + list.Count);
+
+            //cast check
+            if(list[0].Item1 != SchemeTypes.Number)
+                throw new Exception("Operator ' >= ' :: operand: "+list[0].Item2 +" is not a number");
+            if(list[1].Item1 != SchemeTypes.Number)
+                throw new Exception("Operator ' >= ' :: operand: " + list[1].Item2 + " is not a number");
+
+            //return check
+            if ((bool)Greater(args).Item2 || (bool)Equal(args).Item2)
+                return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, true);
+            return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, false);
+        }
+        //Less than or equal
+        public static Tuple<SchemeTypes, object> LessOrEqual(object args)
+        {
+            var list = args as List<Tuple<SchemeTypes, object>>;
+            if (list.Count != 2)
+                throw new Exception("Wrong number of arguments for operator '>='. Expected 2, has:" + list.Count);
+
+            //cast check
+            if (list[0].Item1 != SchemeTypes.Number)
+                throw new Exception("Operator ' <= ' :: operand: " + list[0].Item2 + " is not a number");
+            if (list[1].Item1 != SchemeTypes.Number)
+                throw new Exception("Operator ' <= ' :: operand: " + list[1].Item2 + " is not a number");
+
+            //return check
+            if((bool)Lesser(args).Item2 || (bool)Equal(args).Item2)
+                return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, true);
+            return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, false);
+        }
+
+        //Greater
+        public static Tuple<SchemeTypes, object> Greater(object args)
+        {
+            var list = args as List<Tuple<SchemeTypes, object>>;
+            if (list.Count != 2)
+                throw new Exception("Wrong number of arguments for operator '>='. Expected 2, has:" + list.Count);
+
+            //cast check
+            if (list[0].Item1 != SchemeTypes.Number)
+                throw new Exception("Operator ' > ' :: operand: " + list[0].Item2 + " is not a number");
+            if (list[1].Item1 != SchemeTypes.Number)
+                throw new Exception("Operator ' > ' :: operand: " + list[1].Item2 + " is not a number");
+
+            return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, ((double)list[0].Item2 > (double)list[1].Item2));
+        }
+        //Lesser
+        public static Tuple<SchemeTypes, object> Lesser(object args)
+        {
+            var list = args as List<Tuple<SchemeTypes, object>>;
+            if (list.Count != 2)
+                throw new Exception("Wrong number of arguments for operator '>='. Expected 2, has:" + list.Count);
+
+            //cast check
+            if (list[0].Item1 != SchemeTypes.Number)
+                throw new Exception("Operator ' < ' :: operand: " + list[0].Item2 + " is not a number");
+            if (list[1].Item1 != SchemeTypes.Number)
+                throw new Exception("Operator ' < ' :: operand: " + list[1].Item2 + " is not a number");
+
+            return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, ((double)list[0].Item2 < (double)list[1].Item2));
+        }
     }
 }
