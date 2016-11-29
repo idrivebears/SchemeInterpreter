@@ -97,8 +97,9 @@ namespace SchemeInterpreter.TacoScheme
             productionRuleBody = new List<Symbol> { Symbols["Definition"] };
             productionRule = new ProductionRule(Symbols["Form"], productionRuleBody, 0, SemanticLibrary.AcRepeater);
             productionRules.Add(productionRule);
+
             productionRuleBody = new List<Symbol> { Symbols["Expression"] };
-            productionRule = new ProductionRule(Symbols["Form"], productionRuleBody, 0, SemanticLibrary.AcRepeater);
+            productionRule = new ProductionRule(Symbols["Form"], productionRuleBody, 0, SemanticLibrary.AcCollapseExp);
             productionRules.Add(productionRule);
 
             //Definition -> Variable_definition | (begin Definition_list)

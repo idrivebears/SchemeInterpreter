@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SchemeInterpreter.Engine;
 using SchemeInterpreter.LexerEngine;
 using SchemeInterpreter.Structures;
 
@@ -31,41 +32,6 @@ namespace SchemeInterpreter.SyntacticAnalysis
             {
                 Type = type;
                 ActionVal = actionVal;
-            }
-        }
-
-        public struct State //no longer a struct
-        {
-            public readonly int StateId;
-            public object Result;
-            public readonly Symbol Primary;
-
-            public State(int id)
-            {
-                StateId = id;
-                Result = null;
-                Primary = null;
-            }
-
-            public State(int id, object result)
-            {
-                StateId = id;
-                Result = result;
-                Primary = null;
-            }
-
-            public State(int id, Symbol primary)
-            {
-                StateId = id;
-                Result = null;
-                Primary = primary;
-            }
-
-            public override string ToString()
-            {
-                if (Result != null)
-                    return @"<" + StateId + "> " + Result;
-                return StateId.ToString();
             }
         }
 

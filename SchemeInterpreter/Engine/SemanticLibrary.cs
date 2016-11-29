@@ -14,13 +14,13 @@ namespace SchemeInterpreter.Engine
         //Semantic Action library ::
 
         //AcRepeater -> Repeater action (retransmits state result_
-        public static object AcRepeater(List<LR1Table.State> args)
+        public static object AcRepeater(List<State> args)
         {
             return args[0].Result;
         }
 
         //AppendList -> * List
-        public static object AcBuildRightList(List<LR1Table.State> args)
+        public static object AcBuildRightList(List<State> args)
         {
             var node = args[0].Result as Tuple<Stdlib.SchemeTypes, object>; //catch new datum to add
             var list = args[1].Result as Tuple<Stdlib.SchemeTypes, object>;
@@ -31,7 +31,7 @@ namespace SchemeInterpreter.Engine
             return list; //return the list
         }
         //AppendList -> List *
-        public static object AcBuildLeftList(List<LR1Table.State> args)
+        public static object AcBuildLeftList(List<State> args)
         {
             var node = args[1].Result as Tuple<Stdlib.SchemeTypes, object>; //catch new datum to add
             var list = args[0].Result as Tuple<Stdlib.SchemeTypes, List<Tuple<Stdlib.SchemeTypes, object>>>; //Catch the list variable
@@ -40,14 +40,14 @@ namespace SchemeInterpreter.Engine
             return list; //return the list
         }
         //Create Datum list
-        public static object AcCreateList(List<LR1Table.State> args)
+        public static object AcCreateList(List<State> args)
         {
             var newList = new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.List, new List<Tuple<Stdlib.SchemeTypes, object>>());
             return newList; //return the list
         }
 
         //AcReduceBoolean -> Reduces boolean to const
-        public static object AcReduceBoolean(List<LR1Table.State> args)
+        public static object AcReduceBoolean(List<State> args)
         {
             var state = args[0];
             var primary = state.Primary as LR1Table.ExtendedSymbol;
@@ -57,7 +57,7 @@ namespace SchemeInterpreter.Engine
         }
 
         //AcReduceNumber -> Reduces Number to const
-        public static object AcReduceNumber(List<LR1Table.State> args)
+        public static object AcReduceNumber(List<State> args)
         {
             var state = args[0];
             var primary = state.Primary as LR1Table.ExtendedSymbol;
@@ -67,7 +67,7 @@ namespace SchemeInterpreter.Engine
         }
 
         //AcReduceString -> Reduces string to const
-        public static object AcReduceString(List<LR1Table.State> args)
+        public static object AcReduceString(List<State> args)
         {
             var state = args[0];
             var primary = state.Primary as LR1Table.ExtendedSymbol;
@@ -77,12 +77,12 @@ namespace SchemeInterpreter.Engine
         }
 
         //Ac 'Datum to Expression
-        public static object AcRepeaterIgnoreFirst(List<LR1Table.State> args)
+        public static object AcRepeaterIgnoreFirst(List<State> args)
         {
             return args[1].Result;
         }
         //Application
-        public static object AcBuildApplication(List<LR1Table.State> args)
+        public static object AcBuildApplication(List<State> args)
         {
             var function = args[1].Result as Tuple<Stdlib.SchemeTypes, object>;
             var stateArgs = args[2].Result as Tuple<Stdlib.SchemeTypes, object>;
@@ -98,18 +98,25 @@ namespace SchemeInterpreter.Engine
                 throw new Exception("Function: "+ function.Item2 + "is not defined");
             }
 
-            return (funcPtr(funcArgs) as Tuple<Stdlib.SchemeTypes, object>);
+            //return (funcPtr(funcArgs) as Tuple<Stdlib.SchemeTypes, object>);
+            //build new Application
+
+            var app = new State(args[0].StateId);
+            app.Exec = funcPtr;
+            app.Args = funcArgs;
+
+            return new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Application, app);
         }
 
         //Build variable from identifier
-        public static object AcBuildVariableFromId(List<LR1Table.State> args)
+        public static object AcBuildVariableFromId(List<State> args)
         {
             var primary = args[0].Primary as LR1Table.ExtendedSymbol;
             return new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Variable, primary.Value);
         }
 
         //Lookup variable in Enviroment
-        public static object AcLookupSym(List<LR1Table.State> args)
+        public static object AcLookupSym(List<State> args)
         {
             var id = args[0].Result as Tuple<Stdlib.SchemeTypes, object>;
             Tuple<Stdlib.SchemeTypes, object> variable;
@@ -127,7 +134,7 @@ namespace SchemeInterpreter.Engine
         }
 
         //Define variable in Enviroment
-        public static object AcDefineVar(List<LR1Table.State> args)
+        public static object AcDefineVar(List<State> args)
         {
             
             var id = args[2].Result as Tuple<Stdlib.SchemeTypes, object>;
@@ -147,9 +154,12 @@ namespace SchemeInterpreter.Engine
             return value; //return assigned value
         }
         //Handle if statement
-        public static object AcHandleIf(List<LR1Table.State> args)
+        public static object AcHandleIf(List<State> args)
         {
             var cond = args[2].Result as Tuple<Stdlib.SchemeTypes, object>;
+            if (cond.Item1 == Stdlib.SchemeTypes.Application)
+                cond = _collapseApp(cond);
+
             var exp1 = args[3].Result as Tuple<Stdlib.SchemeTypes, object>;
             var exp2 = args[4].Result as Tuple<Stdlib.SchemeTypes, object>;
 
@@ -160,8 +170,34 @@ namespace SchemeInterpreter.Engine
             else
                 return exp2;
         }
+
+        //Collapse Expression
+        public static object AcCollapseExp(List<State> args)
+        {
+            //check if its application
+            var headerApp = args[0].Result as Tuple<Stdlib.SchemeTypes, object>;
+            if (headerApp.Item1 != Stdlib.SchemeTypes.Application)
+                return headerApp; //Repeater
+
+            var result = _collapseApp(headerApp);
+            return result;
+        }
+
+        private static Tuple<Stdlib.SchemeTypes, object> _collapseApp(Tuple<Stdlib.SchemeTypes, object> tupleApp)
+        {
+            var app = tupleApp.Item2 as State; 
+            var args = app.Args as List<Tuple<Stdlib.SchemeTypes, object>>;
+
+            for (var i = 0; i < args.Count; i++)
+            {
+                if (args[i].Item1 == Stdlib.SchemeTypes.Application)
+                    args[i] = _collapseApp(args[i]);
+            }
+            return app.Exec(app.Args) as Tuple<Stdlib.SchemeTypes, object>;
+        }
+
         //Build lambda function [Warning, here there be dragons]
-        public static object AcBuildLambda(List<LR1Table.State> args)
+        public static object AcBuildLambda(List<State> args)
         {
             //Build functions
             return null;

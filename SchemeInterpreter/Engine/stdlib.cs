@@ -21,7 +21,9 @@ namespace SchemeInterpreter.Engine
             Primary = 5,
             State = 6,
             Identifier = 7,
-            Variable = 8
+            Variable = 8,
+            Application = 9,
+            Scope = 10
         };
 
         //Standard Library Functions
