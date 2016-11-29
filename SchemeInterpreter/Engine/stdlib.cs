@@ -23,7 +23,8 @@ namespace SchemeInterpreter.Engine
             Identifier = 7,
             Variable = 8,
             Application = 9,
-            Scope = 10
+            Scope = 10,
+            Lambda = 11
         };
 
         //Standard Library Functions

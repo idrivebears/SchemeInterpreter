@@ -7,6 +7,7 @@ using SchemeInterpreter.Structures;
 
 namespace SchemeInterpreter.Engine
 {
+    [Serializable]
     public class State //no longer a struct
     {
         public readonly int StateId;
@@ -16,6 +17,9 @@ namespace SchemeInterpreter.Engine
         //For application
         public Func<object, object> Exec;
         public object Args;
+
+        //For lambdas
+        public Lambda Lamb;
 
         public State(int id)
         {

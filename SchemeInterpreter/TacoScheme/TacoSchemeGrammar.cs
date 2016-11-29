@@ -129,18 +129,18 @@ namespace SchemeInterpreter.TacoScheme
 
             //Definition_list -> Definition_list Definition | EPS
             productionRuleBody = new List<Symbol> { Symbols["Definition_list"], Symbols["Definition"] };
-            productionRule = new ProductionRule(Symbols["Definition_list"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Definition_list"], productionRuleBody, 0, SemanticLibrary.AcBuildLeftList);
             productionRules.Add(productionRule);
             productionRuleBody = new List<Symbol> {Symbols["Epsilon"] };
-            productionRule = new ProductionRule(Symbols["Definition_list"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Definition_list"], productionRuleBody, 0, SemanticLibrary.AcCreateList);
             productionRules.Add(productionRule);
 
             //Variable_list -> Variable_list Variable | EPS
             productionRuleBody = new List<Symbol> { Symbols["Variable_list"], Symbols["Variable"] };
-            productionRule = new ProductionRule(Symbols["Variable_list"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Variable_list"], productionRuleBody, 0, SemanticLibrary.AcBuildLeftList);
             productionRules.Add(productionRule);
             productionRuleBody = new List<Symbol> { Symbols["Epsilon"]};
-            productionRule = new ProductionRule(Symbols["Variable_list"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Variable_list"], productionRuleBody, 0, SemanticLibrary.AcCreateList);
             productionRules.Add(productionRule);
 
 
@@ -151,7 +151,7 @@ namespace SchemeInterpreter.TacoScheme
 
             //Body -> Definition_list Expression_list
             productionRuleBody = new List<Symbol> { Symbols["Definition_list"], Symbols["Expression_list"] };
-            productionRule = new ProductionRule(Symbols["Body"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Body"], productionRuleBody, 0, SemanticLibrary.AcBuildLambdaBody);
             productionRules.Add(productionRule);
 
             //Expression_list -> Expression Expression_list | EPS
@@ -174,13 +174,13 @@ namespace SchemeInterpreter.TacoScheme
             productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody, 0, SemanticLibrary.AcRepeater);
             productionRules.Add(productionRule);
             productionRuleBody = new List<Symbol> { Symbols["Variable"] };
-            productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody, 0, SemanticLibrary.AcLookupSym);
+            productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody, 0, SemanticLibrary.AcRepeater);
             productionRules.Add(productionRule);
             productionRuleBody = new List<Symbol> { Symbols["(Apostrophe)"], Symbols["Datum"] };
             productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody, 0, SemanticLibrary.AcRepeaterIgnoreFirst);
             productionRules.Add(productionRule);
             productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(Lambda)"], Symbols["Formals"], Symbols["Body"], Symbols["(ParentClose)"] };
-            productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody, 0, SemanticLibrary.AcBuildLambda);
             productionRules.Add(productionRule);
             productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["(If)"], Symbols["Expression"], Symbols["Expression"], Symbols["Expression"], Symbols["(ParentClose)"] };
             productionRule = new ProductionRule(Symbols["Expression"], productionRuleBody, 0, SemanticLibrary.AcHandleIf);
@@ -206,10 +206,10 @@ namespace SchemeInterpreter.TacoScheme
             //Formals -> Variable
             //         | (Variable_list)
             productionRuleBody = new List<Symbol> { Symbols["Variable"] };
-            productionRule = new ProductionRule(Symbols["Formals"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Formals"], productionRuleBody, 0, SemanticLibrary.AcRepeater);
             productionRules.Add(productionRule);
             productionRuleBody = new List<Symbol> { Symbols["(ParentOpen)"], Symbols["Variable_list"], Symbols["(ParentClose)"] };
-            productionRule = new ProductionRule(Symbols["Formals"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Formals"], productionRuleBody, 0, SemanticLibrary.AcRepeaterIgnoreFirst);
             productionRules.Add(productionRule);
 
             //Application -> (Expression Expression_list)

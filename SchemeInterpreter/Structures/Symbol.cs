@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SchemeInterpreter.Structures
 {
+    [Serializable]
     public class Symbol
     {
         public enum SymTypes { Terminal, NoTerminal, Epsilon, EOS }
