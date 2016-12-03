@@ -50,15 +50,13 @@ namespace SchemeInterpreter.Engine
                     args[i] = _collapseApp(args[i]);
                 if (args[i].Item1 == Stdlib.SchemeTypes.Variable)
                     args[i] = _collapseApp(_collapseIdentifier(args[i]));
-                if (args[i].Item1 == Stdlib.SchemeTypes.Lambda)
-                    throw new NotImplementedException("Lambdas within lambdas is not supported");
             }
             //Check if its a function or a Lambda
             if (app.Exec != null)
                 return app.Exec(app.Args) as Tuple<Stdlib.SchemeTypes, object>;
             if (app.Lamb != null)
                 throw new Exception("Lambdas within lambdas is not supported");
-            throw new Exception("Lambda is resolves to inexecutable expression: " + app);
+            throw new Exception("Lambda resolves to inexecutable expression: " + app);
         }
 
         private static Tuple<Stdlib.SchemeTypes, object> _collapseIdentifier(Tuple<Stdlib.SchemeTypes, object> tupleApp)

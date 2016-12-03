@@ -22,7 +22,8 @@ namespace SchemeInterpreter
             var schemeSymbols = new List<Symbol>(scheme.Symbols.Values);
             var schemeGrammar = new Grammar(scheme.productionRules, schemeSymbols);
             var parser = new LR1Table(schemeGrammar, "Scheme.miniflex");
-            //var source = File.ReadAllText("source.ss");
+            var source = File.ReadAllText("source.ss");
+            var program = parser.Accept(source);
 
             var input = "";
             do
@@ -33,8 +34,8 @@ namespace SchemeInterpreter
                     break;
                 try
                 {
-                    var program = parser.Accept(input);
-                    Console.WriteLine(program.Result);
+                    program = parser.Accept(input);
+                    //Console.WriteLine(program.Result);
                 }
                 catch (Exception e)
                 {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -223,6 +224,51 @@ namespace SchemeInterpreter.Engine
                 throw new Exception("Operator ' < ' :: operand: " + list[1].Item2 + " is not a number");
 
             return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, ((double)list[0].Item2 < (double)list[1].Item2));
+        }
+        //Modulo
+        public static Tuple<SchemeTypes, object> Modulo(object args)
+        {
+            var list = args as List<Tuple<SchemeTypes, object>>;
+            if (list.Count != 2)
+                throw new Exception("Wrong number of arguments for operator 'modulo'. Expected 2, has:" + list.Count);
+
+            //cast check
+            if (list[0].Item1 != SchemeTypes.Number)
+                throw new Exception("Operator ' modulo ' :: operand: " + list[0].Item2 + " is not a number");
+            if (list[1].Item1 != SchemeTypes.Number)
+                throw new Exception("Operator ' modulo ' :: operand: " + list[1].Item2 + " is not a number");
+
+            return new Tuple<SchemeTypes, object>(SchemeTypes.Number, ((double)list[0].Item2 % (double)list[1].Item2));
+        }
+        //Str-len
+        public static Tuple<SchemeTypes, object> StrLength(object args)
+        {
+            var list = args as List<Tuple<SchemeTypes, object>>;
+            if (list.Count != 1)
+                throw new Exception("Wrong number of arguments for operator 'str-length'. Expected 1, has:" + list.Count);
+
+            //cast check
+            if (list[0].Item1 != SchemeTypes.String)
+                throw new Exception("Operator ' str-length ' :: operand: " + list[0].Item2 + " is not a string");
+
+
+            return new Tuple<SchemeTypes, object>(SchemeTypes.Number, (double) (((string) list[0].Item2).Length) );
+        }
+        //Modulo
+        public static Tuple<SchemeTypes, object> StrAppend(object args)
+        {
+            var list = args as List<Tuple<SchemeTypes, object>>;
+            if (list.Count != 2)
+                throw new Exception("Wrong number of arguments for operator 'str-append'. Expected 2, has:" + list.Count);
+
+            //cast check
+            if (list[0].Item1 != SchemeTypes.String)
+                throw new Exception("Operator ' str-append ' :: operand: " + list[0].Item2 + " is not a string");
+            if (list[1].Item1 != SchemeTypes.String)
+                throw new Exception("Operator ' str-append ' :: operand: " + list[1].Item2 + " is not a string");
+
+            
+            return new Tuple<SchemeTypes, object>(SchemeTypes.String, String.Concat( (string) list[0].Item2 , (string) list[1].Item2 ));
         }
     }
 }

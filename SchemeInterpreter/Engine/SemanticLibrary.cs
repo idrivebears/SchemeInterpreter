@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SchemeInterpreter.SyntacticAnalysis;
 
@@ -45,6 +46,17 @@ namespace SchemeInterpreter.Engine
         public static object AcCreateList(List<State> args)
         {
             var newList = new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.List, new List<Tuple<Stdlib.SchemeTypes, object>>());
+            return newList; //return the list
+        }
+
+        //Create Datum list
+        public static object AcCreateListWithInit(List<State> args)
+        {
+            var newList = new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.List, new List<Tuple<Stdlib.SchemeTypes, object>>());
+            var listPointer = newList.Item2 as List<Tuple<Stdlib.SchemeTypes, object>>;
+            var node = args[0].Result as Tuple<Stdlib.SchemeTypes, object>; //catch init to add
+            listPointer.Add(node);
+
             return newList; //return the list
         }
 
@@ -93,7 +105,7 @@ namespace SchemeInterpreter.Engine
 
             //Check if application is constant
             if (function.Item1 != Stdlib.SchemeTypes.Lambda && function.Item1 != Stdlib.SchemeTypes.Identifier && function.Item1 != Stdlib.SchemeTypes.Variable)
-                throw new Exception("Primary: "+ function.Item2 + " Cannot be built into an application!");
+                throw new Exception("Expr: "+ function.Item2 + " Cannot be built into an application!");
             //Collapse lambdas
             if (function.Item1 == Stdlib.SchemeTypes.Lambda)
                 return (function.Item2 as Lambda).Execute(funcArgs);
@@ -289,5 +301,15 @@ namespace SchemeInterpreter.Engine
             return newLambda;
         }
 
+        //Print program
+        public static object PrintProgram(List<State> args)
+        {
+            //print the program & repeat
+            var program = args[0].Result as Tuple<Stdlib.SchemeTypes, object>;
+            var formResult = program.Item2 as List<Tuple<Stdlib.SchemeTypes, object>>;
+            foreach (var res in formResult)
+                Console.WriteLine("> "+res);
+            return args;
+        }
     }
 }

@@ -82,15 +82,15 @@ namespace SchemeInterpreter.TacoScheme
 
             //Program -> Form_list
             productionRuleBody = new List<Symbol> { Symbols["Form_list"] };
-            productionRule = new ProductionRule(Symbols["Program"], productionRuleBody, 0, SemanticLibrary.AcRepeater);
+            productionRule = new ProductionRule(Symbols["Program"], productionRuleBody, 0, SemanticLibrary.PrintProgram);
             productionRules.Add(productionRule);
 
             //Form_list -> Form_list Form | Form
             productionRuleBody = new List<Symbol> { Symbols["Form_list"], Symbols["Form"] };
-            productionRule = new ProductionRule(Symbols["Form_list"], productionRuleBody);
+            productionRule = new ProductionRule(Symbols["Form_list"], productionRuleBody,0, SemanticLibrary.AcBuildLeftList);
             productionRules.Add(productionRule);
             productionRuleBody = new List<Symbol> { Symbols["Form"]};
-            productionRule = new ProductionRule(Symbols["Form_list"], productionRuleBody, 0, SemanticLibrary.AcRepeater);
+            productionRule = new ProductionRule(Symbols["Form_list"], productionRuleBody, 0, SemanticLibrary.AcCreateListWithInit);
             productionRules.Add(productionRule);
 
             //Form -> Definition | Expression

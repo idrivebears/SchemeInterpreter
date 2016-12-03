@@ -22,6 +22,9 @@ namespace SchemeInterpreter.Engine
             {"=", Stdlib.Equal},
             {"<", Stdlib.Lesser},
             {">", Stdlib.Greater},
+            {"modulo", Stdlib.Modulo},
+            {"str-length", Stdlib.StrLength},
+            {"str-append", Stdlib.StrAppend},
         };
 
         public static Dictionary<string, Tuple<Stdlib.SchemeTypes, object>> variables =
@@ -38,6 +41,9 @@ namespace SchemeInterpreter.Engine
                 {"=", new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Function, "=")},
                 {"<", new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Function, "<")},
                 {">", new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Function, ">")},
+                {"modulo", new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Function, "modulo")},
+                {"str-length", new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Function, "str-length")},
+                {"str-append", new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Function, "str-append")}
             };
     }
 }

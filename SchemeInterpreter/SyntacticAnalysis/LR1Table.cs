@@ -138,9 +138,15 @@ namespace SchemeInterpreter.SyntacticAnalysis
                     if (focusSym.IsEOS())
                     {
                         PrintErrors();
-                        Tuple<Symbol, int> f = new Tuple<Symbol, int>(focusSym, -2);
-                        Tuple<int, Symbol> focus = new Tuple<int, Symbol>(inputQueue.Count, focusSym);
+                        var f = new Tuple<Symbol, int>(focusSym, -2);
+                        var focus = new Tuple<int, Symbol>(inputQueue.Count, focusSym);
                         _errorList.Add(new Tuple<int, Tuple<int, Symbol>>(f.Item2, focus));
+                        //get follow set
+                        var state = _lr1.AutomataStates[focusState.StateId];
+                        var follows = _grammar.FollowSets[state.Header.Header];
+                        var errFollow = follows.Where(expec => !expec.IsEOS()).Aggregate("{", (current, expec) => current + (expec.TokenClass + ", "));
+                        errFollow += " }";
+                        Console.WriteLine("Sintax error on: " + focusSym + "Token Expected " + errFollow);
                         PrintErrors();
                         return new State(-1);
                     }
@@ -158,6 +164,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                             //_errorList.Add(new Tuple<int, Symbol>(inputQueue.Count, i));
                             Tuple<int, Symbol> focus = new Tuple<int, Symbol>(inputQueue.Count, focusSym);
                             _errorList.Add(new Tuple<int, Tuple<int, Symbol>>(gotoElement.Value, focus));
+                            Console.WriteLine("Sintax error on: " + focusSym);
                             gotoFound = true;
                             break;
                         }
@@ -169,6 +176,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                         Tuple < Symbol, int>  f =new Tuple<Symbol, int>(focusSym, -1);
                         Tuple<int, Symbol> focus = new Tuple<int, Symbol>(inputQueue.Count, focusSym);
                         _errorList.Add(new Tuple<int, Tuple<int, Symbol>>(f.Item2, focus));
+                        //Console.WriteLine("Sintax error on: " + focusSym);
                         inputQueue.Dequeue();
                         //if (stateStack.Count == 0) return new State(-1, null);
                     }
@@ -250,7 +258,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             //if (_errorList.Count == 0) Console.WriteLine("No sintax error found.");
             foreach (var i in _errorList)
             {
-                Console.WriteLine("Sintax error on: " + i.Item2.Item2);
+                //Console.WriteLine("Sintax error on: " + i.Item2.Item2);
             }
         }
 
