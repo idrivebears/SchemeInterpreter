@@ -22,7 +22,7 @@ namespace SchemeInterpreter
             var schemeSymbols = new List<Symbol>(scheme.Symbols.Values);
             var schemeGrammar = new Grammar(scheme.productionRules, schemeSymbols);
             var parser = new LR1Table(schemeGrammar, "Scheme.miniflex");
-            var source = File.ReadAllText("source.ss");
+            //var source = File.ReadAllText("source.ss");
 
             var input = "";
             do

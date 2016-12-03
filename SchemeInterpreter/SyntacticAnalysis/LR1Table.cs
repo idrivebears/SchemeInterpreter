@@ -110,7 +110,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
             var symbolStack = new Stack<Symbol>();
             var inputQueue = new Queue<ExtendedSymbol>();
             _errorList = new List<Tuple<int, Tuple<int, Symbol>>>();
-
+            var isAccepted = true;
             //build input queue
             var tokens = lexer.Tokenize(input);
             foreach (var token in tokens)
@@ -134,8 +134,13 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
                 if (focusAction == null)
                 {
+                    isAccepted = false;
                     if (focusSym.IsEOS())
                     {
+                        PrintErrors();
+                        Tuple<Symbol, int> f = new Tuple<Symbol, int>(focusSym, -2);
+                        Tuple<int, Symbol> focus = new Tuple<int, Symbol>(inputQueue.Count, focusSym);
+                        _errorList.Add(new Tuple<int, Tuple<int, Symbol>>(f.Item2, focus));
                         PrintErrors();
                         return new State(-1);
                     }
@@ -208,9 +213,12 @@ namespace SchemeInterpreter.SyntacticAnalysis
                         break;
                 }
             }
-            //PrintErrors();
+            PrintErrors();
             stateStack.Pop(); //start production
-            return stateStack.Pop(); //pop programm
+            if(isAccepted)
+                return stateStack.Pop(); //pop programm
+            else
+                return new State(-1);
         }
 
         private static void PrintDebug(IEnumerable<State> stateStack, IEnumerable<Symbol> symStack, IEnumerable<ExtendedSymbol> inputQueue, Action action)
@@ -239,7 +247,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
         }
         private void PrintErrors()
         {
-            if (_errorList.Count == 0) Console.WriteLine("No sintax error found.");
+            //if (_errorList.Count == 0) Console.WriteLine("No sintax error found.");
             foreach (var i in _errorList)
             {
                 Console.WriteLine("Sintax error on: " + i.Item2.Item2);
