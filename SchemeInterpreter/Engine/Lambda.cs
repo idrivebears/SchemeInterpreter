@@ -53,19 +53,25 @@ namespace SchemeInterpreter.Engine
                 if (args[i].Item1 == Stdlib.SchemeTypes.Lambda)
                     throw new NotImplementedException("Lambdas within lambdas is not supported");
             }
-            return app.Exec(app.Args) as Tuple<Stdlib.SchemeTypes, object>;
+            //Check if its a function or a Lambda
+            if (app.Exec != null)
+                return app.Exec(app.Args) as Tuple<Stdlib.SchemeTypes, object>;
+            if (app.Lamb != null)
+                throw new Exception("Lambdas within lambdas is not supported");
+            throw new Exception("Lambda is resolves to inexecutable expression: " + app);
         }
 
         private static Tuple<Stdlib.SchemeTypes, object> _collapseIdentifier(Tuple<Stdlib.SchemeTypes, object> tupleApp)
         {
-            try
+            //Lookup on lambda enviroment
+            if (Variables.ContainsKey((string) tupleApp.Item2))
+                return Variables[(string)tupleApp.Item2];
+            //
+            if (Enviroment.variables.ContainsKey((string) tupleApp.Item2))
+                return Enviroment.variables[(string) tupleApp.Item2];
+            else
             {
-                var lookup = Variables[(string)tupleApp.Item2];
-                return lookup;
-            }
-            catch (Exception)
-            {
-                throw new Exception("Symbol: " + tupleApp.Item2 + " was not found in the lambda enviroment");
+                throw new Exception("Identifier: " + tupleApp.Item2 + " Could not be found");
             }
         }
 

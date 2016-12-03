@@ -90,6 +90,10 @@ namespace SchemeInterpreter.Engine
             var stateArgs = args[2].Result as Tuple<Stdlib.SchemeTypes, object>;
             var funcArgs = stateArgs.Item2 as List<Tuple<Stdlib.SchemeTypes, object>>;
 
+
+            //Check if application is constant
+            if (function.Item1 != Stdlib.SchemeTypes.Lambda && function.Item1 != Stdlib.SchemeTypes.Identifier && function.Item1 != Stdlib.SchemeTypes.Variable)
+                throw new Exception("Primary: "+ function.Item2 + " Cannot be built into an application!");
             //Collapse lambdas
             if (function.Item1 == Stdlib.SchemeTypes.Lambda)
                 return (function.Item2 as Lambda).Execute(funcArgs);
@@ -284,5 +288,6 @@ namespace SchemeInterpreter.Engine
             var newLambda = new Tuple<Stdlib.SchemeTypes, object>(Stdlib.SchemeTypes.Lambda, new Lambda(formals, bodyList));
             return newLambda;
         }
+
     }
 }

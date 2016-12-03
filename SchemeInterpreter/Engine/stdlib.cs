@@ -153,7 +153,7 @@ namespace SchemeInterpreter.Engine
                     }
                     return new Tuple<SchemeTypes, object>(SchemeTypes.Boolean, true);
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("Type: "+ list[0].Item1 + " Is not comparable");
             }
         }
 
