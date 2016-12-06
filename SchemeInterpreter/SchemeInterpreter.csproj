@@ -41,6 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\Enviroment.cs" />
+    <Compile Include="Engine\Lambda.cs" />
+    <Compile Include="Engine\SemanticLibrary.cs" />
+    <Compile Include="Engine\State.cs" />
+    <Compile Include="Engine\stdlib.cs" />
     <Compile Include="LexerEngine\ILexer.cs" />
     <Compile Include="LexerEngine\Lexer.cs" />
     <Compile Include="LexerEngine\LexerGenerator.cs" />
@@ -61,9 +66,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Engine\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

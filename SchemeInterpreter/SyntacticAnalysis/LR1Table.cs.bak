@@ -17,7 +17,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
         private readonly Action[,] _table;
         private readonly Dictionary<Symbol, int> _terminalLookup;
         private readonly Dictionary<Tuple<Symbol, int>, int> _gotoLookup;
-        private List<Tuple<int, Tuple<int, Symbol>>> _errorList;
+        private List<Tuple<int, Symbol>> _errorList;
         private readonly LR1 _lr1;
         private readonly int _acceptanceState;
         private readonly LexerEngine.Lexer lexer;
@@ -109,8 +109,8 @@ namespace SchemeInterpreter.SyntacticAnalysis
             var stateStack = new Stack<State>();
             var symbolStack = new Stack<Symbol>();
             var inputQueue = new Queue<ExtendedSymbol>();
-            _errorList = new List<Tuple<int, Tuple<int, Symbol>>>();
-            var isAccepted = true;
+            _errorList = new List<Tuple<int, Symbol>>();
+
             //build input queue
             var tokens = lexer.Tokenize(input);
             foreach (var token in tokens)
@@ -134,25 +134,9 @@ namespace SchemeInterpreter.SyntacticAnalysis
 
                 if (focusAction == null)
                 {
-                    isAccepted = false;
-                    if (focusSym.IsEOS())
-                    {
-                        PrintErrors();
-                        var f = new Tuple<Symbol, int>(focusSym, -2);
-                        var focus = new Tuple<int, Symbol>(inputQueue.Count, focusSym);
-                        _errorList.Add(new Tuple<int, Tuple<int, Symbol>>(f.Item2, focus));
-                        //get follow set
-                        var state = _lr1.AutomataStates[focusState.StateId];
-                        var follows = _grammar.FollowSets[state.Header.Header];
-                        var errFollow = follows.Where(expec => !expec.IsEOS()).Aggregate("{", (current, expec) => current + (expec.TokenClass + ", "));
-                        errFollow += " }";
-                        Console.WriteLine("Sintax error on: " + focusSym + "Token Expected " + errFollow);
-                        PrintErrors();
-                        return new State(-1);
-                    }
                     var gotoFound = false;
                     foreach (var i in _grammar.Symbols)
-                    {
+                    { 
                         var y = _gotoLookup.Any(x => x.Key.Item1 == i && x.Key.Item2 == focusState.StateId);
                         if (_gotoLookup.Any(x => x.Key.Item1 == i && x.Key.Item2 == focusState.StateId))
                         {
@@ -160,25 +144,15 @@ namespace SchemeInterpreter.SyntacticAnalysis
                             var gotoElement = _gotoLookup.First(x => x.Key.Item1 == i && x.Key.Item2 == focusState.StateId);
                             stateStack.Push(new State(gotoElement.Value));
                             symbolStack.Push(i);
-
-                            //_errorList.Add(new Tuple<int, Symbol>(inputQueue.Count, i));
-                            Tuple<int, Symbol> focus = new Tuple<int, Symbol>(inputQueue.Count, focusSym);
-                            _errorList.Add(new Tuple<int, Tuple<int, Symbol>>(gotoElement.Value, focus));
-                            Console.WriteLine("Sintax error on: " + focusSym);
+                            _errorList.Add(new Tuple<int, Symbol>(inputQueue.Count, i));
                             gotoFound = true;
                             break;
                         }
                     }
-                    
                     if (!gotoFound)
                     {
-                        //stateStack.Pop();
-                        Tuple < Symbol, int>  f =new Tuple<Symbol, int>(focusSym, -1);
-                        Tuple<int, Symbol> focus = new Tuple<int, Symbol>(inputQueue.Count, focusSym);
-                        _errorList.Add(new Tuple<int, Tuple<int, Symbol>>(f.Item2, focus));
-                        //Console.WriteLine("Sintax error on: " + focusSym);
-                        inputQueue.Dequeue();
-                        //if (stateStack.Count == 0) return new State(-1, null);
+                        stateStack.Pop();
+                        if (stateStack.Count == 0) return new State(-1, null);
                     }
                     continue;
                     //return false; //Action is not defined for the current state and terminal.
@@ -186,7 +160,7 @@ namespace SchemeInterpreter.SyntacticAnalysis
                 switch (focusAction.Type)
                 {
                     case ActionTypes.Shift:
-                        //Do the shift ->
+                        //Do the shift -> 
                         var topsym = inputQueue.Dequeue();
                         //Consider De-stringification (remove leading and trailing ")
                         if (topsym.TokenClass == "(String)")
@@ -221,12 +195,9 @@ namespace SchemeInterpreter.SyntacticAnalysis
                         break;
                 }
             }
-            PrintErrors();
+            //PrintErrors();
             stateStack.Pop(); //start production
-            if(isAccepted)
-                return stateStack.Pop(); //pop programm
-            else
-                return new State(-1);
+            return stateStack.Pop(); //pop programm
         }
 
         private static void PrintDebug(IEnumerable<State> stateStack, IEnumerable<Symbol> symStack, IEnumerable<ExtendedSymbol> inputQueue, Action action)
@@ -255,10 +226,10 @@ namespace SchemeInterpreter.SyntacticAnalysis
         }
         private void PrintErrors()
         {
-            //if (_errorList.Count == 0) Console.WriteLine("No sintax error found.");
+            if (_errorList.Count == 0) Console.WriteLine("No sintax error found.");
             foreach (var i in _errorList)
             {
-                //Console.WriteLine("Sintax error on: " + i.Item2.Item2);
+                Console.WriteLine("Sintax error on: " + (inputLength - i.Item1) + ", expecting: " + i.Item2.ToString());
             }
         }
 
