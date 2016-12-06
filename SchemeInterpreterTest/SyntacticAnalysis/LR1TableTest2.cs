@@ -72,7 +72,7 @@ namespace SchemeInterpreterTest.SyntacticAnalysis
 
             //build table
             var analyzer = new LR1Table(g);
-            //analyzer.Print();
+            analyzer.Print();
 
             Assert.IsTrue(analyzer.Accept("(id)"));
         }

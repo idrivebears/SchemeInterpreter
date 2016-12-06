@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using SchemeInterpreter.Engine;
 using SchemeInterpreter.LexerEngine;
 using SchemeInterpreter.Structures;
 using SchemeInterpreter.SyntacticAnalysis;
@@ -21,9 +23,27 @@ namespace SchemeInterpreter
             var schemeGrammar = new Grammar(scheme.productionRules, schemeSymbols);
             var parser = new LR1Table(schemeGrammar, "Scheme.miniflex");
             var source = File.ReadAllText("source.ss");
+            var program = parser.Accept(source);
 
-            var check = parser.Accept(source);
+            var input = "";
+            do
+            {
+                Console.Write("Taco> ");
+                input = Console.ReadLine();
+                if(input == "exit")
+                    break;
+                try
+                {
+                    program = parser.Accept(input);
+                    //Console.WriteLine(program.Result);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("TacoError:: "+ e.Message);
+                }
+            } while (true);
 
+            Console.WriteLine("TERMINATED");
             Console.Read();
         }
     }

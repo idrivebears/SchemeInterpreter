@@ -15,9 +15,9 @@ namespace SchemeInterpreter.Structures
         public Symbol Header { get; set; }
         public List<Symbol> Body { get; set; }
         public int Caret { get; set; }
-        public Func<List<LR1Table.State>, object> SemanticAction;
+        public Func<List<State>, object> SemanticAction;
 
-        public ProductionRule(Symbol header, List<Symbol> body, int Caret = 0, Func< List<LR1Table.State>, object> semanticAction = null)
+        public ProductionRule(Symbol header, List<Symbol> body, int Caret = 0, Func< List<State>, object> semanticAction = null)
         {
             Header = header;
             Body = body;
